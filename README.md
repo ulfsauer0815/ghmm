@@ -15,7 +15,7 @@ how to do that.
 
 The `config.url` must point to where ghmm will be available.
 Make sure it is publicly accessible. If you want to test or use it locally,
-see the ["Local Deployment" section](#Local-Deployment) below.
+see the ["Local Deployment" section](#local-deployment) below.
 
 The `config.content_type` must be `json`.
 
