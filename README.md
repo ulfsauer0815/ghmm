@@ -24,14 +24,14 @@ imitate GitHub.
 
 ## Create a Mattermost Incoming Webhook
 
-The [mattermost documentation](https://docs.mattermost.com/developer/webhooks-incoming.html)
+The [Mattermost documentation](https://docs.mattermost.com/developer/webhooks-incoming.html)
 explains how to do that to some degree.
 
 You will get an address which looks similar to this:
 http://mattermost.hostname.com/hooks/xxx-generatedkey-xxx
 
 
-## Deploy `ghmm`
+## Deploy ghmm
 
 ### Install [`stack`](https://www.haskellstack.org/)
 
@@ -46,7 +46,7 @@ to install it.
 
 The output will also tell you where to find the executable.
 
-### Create an environment
+### Create an Environment
 
 You need various settings to properly start ghmm, most of them are
 self-explanatory.
@@ -56,7 +56,7 @@ self-explanatory.
 | `PORT`               | Port to start ghmm on                                 |
 | `GITHUB_SECRET`      | The secret you chose to share between GitHub and ghmm |
 | `MATTERMOST_URL`     | The full url where ghmm is available                  |
-| `MATTERMOST_PORT`    | Port where mattermost is available, usually 443       |
+| `MATTERMOST_PORT`    | Port where Mattermost is available, usually 443       |
 | `MATTERMOST_API_KEY` | The value at the end of the incoming webhook url      |
 
 See `config/dev.example` for how this might look like.
@@ -69,17 +69,21 @@ which might not be relevant for you.
 `stack exec ghmm-exe`
 
 Make sure you have configured your environment.
-If it is all set in a file like `config/dev.example`, then you can just load it like this:
+If it is all set in a file like `config/dev`, then you can just load it
+like this:
 
-`. config/dev.example && stack exec ghmm-exe`.
+`. config/dev && stack exec ghmm-exe`.
 
-Now everythign should be set up.
+Now everything should be set up.
 
-## Local Deployment
+### Local Deployment
+
 If you want to test it locally, you can use tunneling services such as
-beameio.net, ngrok.io, pagekite.me, localtunnel.me.
+[beame-insta-ssl](https://github.com/beameio/beame-insta-ssl), [ngrok](https://ngrok.com/),
+[pagekite](https://pagekite.net/), [localtunnel](https://localtunnel.me).
 
 *Note*:
-I personally use beameio.net, because it works great within different networks
-and they provide a static address for free. Otherwise you have to delete and add
-the new address to your GitHub repo(s) every time you disconnect.
+I personally use [beame-insta-ssl](https://github.com/beameio/beame-insta-ssl),
+because it works great within different networks and they provide a static
+address for free. Otherwise you have to delete and add the new address to your
+GitHub repo(s) every time you disconnect.
