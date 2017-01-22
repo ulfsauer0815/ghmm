@@ -1,0 +1,7 @@
+flags: {}
+extra-package-dbs: []
+packages:
+- '.'
+extra-deps:
+- wai-middleware-hmac-0.1.0.0
+resolver: lts-7.9
