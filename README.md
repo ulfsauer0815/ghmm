@@ -1,5 +1,7 @@
 # ghmm
 
+[![Build Status](https://travis-ci.org/UlfS/ghmm.svg?branch=master)](https://travis-ci.org/UlfS/ghmm)
+
 A GitHub event bot for Mattermost.
 
 ## Description
