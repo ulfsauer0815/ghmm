@@ -42,7 +42,7 @@ convertApp cfg = Nat (flip runReaderT cfg . runApp)
 -- ----------------------------------------------
 
 startApp :: Configuration -> IO ()
-startApp cfg = run 8000 (app cfg) -- TODO: put port into config
+startApp cfg = run (cfgPort cfg) (app cfg)
 
 app :: Configuration -> Application
 app cfg = serve (Proxy :: Proxy GithubApi) (appToServer cfg)
