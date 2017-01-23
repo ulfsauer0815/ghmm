@@ -55,12 +55,10 @@ server = eventHandler
 
 
 -- TODO: don't block
--- TODO: check secret
-eventHandler :: Maybe Text -> Maybe Text -> Value -> App NoContent
-eventHandler eventType hubSignature jsonEvent = do
+eventHandler :: Maybe Text -> Value -> App NoContent
+eventHandler eventType jsonEvent = do
   liftIO $ do
     print eventType
-    print hubSignature
     print jsonEvent
   case decodeEvent eventType jsonEvent of
     Just e  -> dispatch e

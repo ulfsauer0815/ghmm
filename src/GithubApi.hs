@@ -125,10 +125,9 @@ instance FromJSON Issue where
   parseJSON = genericParseJSON jsonParseOpts
 
 type GithubApi =
-  Header "X-GitHub-Event" Text
-    :> Header "X-Hub-Signature" Text
-    :> ReqBody '[JSON] Value
-    :> PostNoContent '[JSON] NoContent
+     Header "X-GitHub-Event" Text
+  :> ReqBody '[JSON] Value
+  :> PostNoContent '[JSON] NoContent
 
 
 -- TODO: smarter way to detect prefix (for camel and snake case)
