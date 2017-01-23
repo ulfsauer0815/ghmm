@@ -6,6 +6,7 @@
 module MattermostApi
     ( MattermostApi
     , postEvent
+    , shorten
     ) where
 
 import           GHC.Generics
@@ -87,7 +88,7 @@ renderMessageText event
        <> "Push ("
        <> optBranch ref
        <> (T.pack . show . length $ commits) <> "): "
-       <> mdLink (quoted (firstLine $ cmtMessage headCommit)) compare
+       <> mdLink (quoted (shortenCommitMessage $ cmtMessage headCommit)) compare
     PullRequestEvent action number (PullRequest htmlUrl state title) repository ->
       repoPrefix repository
        <> mdLink ("Pull Request #" <> (T.pack . show) number <> " - " <> state) htmlUrl
@@ -100,7 +101,7 @@ renderMessageText event
     CommentEvent action (Issue state issueHtmlUrl issueUser) (Comment commentHtmlUrl commentBody commentUser) repository ->
       repoPrefix repository
        <> mdLink ("Comment " <> italic action <> " (" <> usrLogin commentUser <> ")") commentHtmlUrl
-       <> ": " <> firstLine commentBody  -- XXX: takes just the first line of the comment, impl. smarter way to cut off
+       <> ": " <> shortenCommentMessage commentBody
   where
     -- XXX: hardcoded master branch, use payload default branch data
   optBranch ref = if ref /= "refs/heads/master" then "on " <> lastSegment ref <> ", " else ""
@@ -111,4 +112,18 @@ renderMessageText event
   italic text = "*" <> text <> "*"
   bold text = italic . italic
   repoPrefix repo = "[" <> mdLink (repName repo) (repHtml_url repo) <> "] "
+  shortenCommitMessage = shorten 50 "..." . firstLine
+  shortenCommentMessage = shorten 72 "..." . firstLine -- XXX: cuts off multilines without marker
   firstLine = T.takeWhile (/= '\n')
+
+shorten :: Int -> Text -> Text -> Text
+shorten maxLen marker str =
+  if len > maxLen && len > max maxLen' markerLen
+  then shortened
+  else str
+  where
+  len = T.length str
+  markerLen = T.length marker
+  maxLen' = maxLen - markerLen
+
+  shortened = T.take maxLen' str `T.append` marker
