@@ -17,10 +17,15 @@ library
   hs-source-dirs:      src
   exposed-modules:     Lib
                      , App
-                     , MattermostApi
-                     , GithubApi
-                     , MessageRendering
-                     , EventMessageRendering
+                     , Github.Api
+                     , Github.Event.Message
+                     , Github.Event.Types
+                     , Github.Event.Json
+                     , Mattermost.Api
+                     , Mattermost.Types
+                     , Mattermost.Github
+                     , Message.Markdown
+                     , Message.Util
   build-depends:       base >= 4.7 && < 5
                      , aeson
                      , servant-server
@@ -64,7 +69,7 @@ test-suite ghmm-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Spec.hs
-  other-modules:       MessageRenderingSpec
+  other-modules:       Message.UtilSpec
   build-depends:       base
                      , ghmm
                      , hspec

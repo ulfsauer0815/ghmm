@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module EventMessageRendering
+module Github.Event.Message
     ( renderMessageText
     ) where
 
@@ -8,8 +8,9 @@ import           Data.Monoid
 import           Data.Text        (Text)
 import qualified Data.Text        as T
 
-import           GithubApi
-import           MessageRendering as Msg
+import           Github.Api
+import           Message.Markdown
+import           Message.Util
 
 -- ----------------------------------------------
 

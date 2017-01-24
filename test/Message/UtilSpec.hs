@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings   #-}
 
-module MessageRenderingSpec
+module Message.UtilSpec
     ( main
     , spec
     ) where
@@ -11,7 +11,7 @@ import           Test.QuickCheck.Instances ()
 
 import qualified Data.Text                 as T
 
-import           MessageRendering
+import           Message.Util
 
 -- ----------------------------------------------
 
@@ -20,7 +20,7 @@ main = hspec spec
 
 spec :: Spec
 spec =
-  describe "MattermostApi.shorten" $ do
+  describe "Message.Util.shorten" $ do
     it "shortens text without marker" $
       shorten 5    ""          "1234567890" `shouldBe` "12345"
     it "shortens text with marker" $

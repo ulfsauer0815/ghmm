@@ -3,9 +3,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators     #-}
 
-module GithubApi
-    ( GithubApi
-    , Event(..)
+module Github.Event.Types
+    ( Event(..)
     , Commit(..)
     , Repository(..)
     , PullRequest(..)
@@ -20,8 +19,6 @@ import           Data.Aeson
 import           Data.Aeson.Types
 import           Data.Char
 import           Data.Text        (Text)
-
-import           Servant
 
 -- ----------------------------------------------
 
@@ -123,11 +120,6 @@ data Issue = Issue
 
 instance FromJSON Issue where
   parseJSON = genericParseJSON jsonParseOpts
-
-type GithubApi =
-     Header "X-GitHub-Event" Text
-  :> ReqBody '[JSON] Value
-  :> PostNoContent '[JSON] NoContent
 
 
 -- TODO: smarter way to detect prefix (for camel and snake case)
