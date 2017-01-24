@@ -17,6 +17,7 @@ import           Data.Aeson
 import           Data.Monoid
 import           Data.Text                  (Text)
 import qualified Data.Text                  as T
+import qualified Data.Text.IO               as T
 
 import           Network.HTTP.Client        (newManager)
 import           Network.HTTP.Client.TLS    (tlsManagerSettings)
@@ -60,13 +61,14 @@ postEvent e = do
   mmPort   <- asks cfgMattermostPort
   mmApiKey <- asks cfgMattermostApiKey
   -- TODO: put into context
-  manager <- liftIO $ newManager tlsManagerSettings
-  liftIO $ putStrLn $ "raw message: " ++ T.unpack messageText
-  res <- liftIO . runExceptT $ hook mmApiKey
-            payload
-            manager (BaseUrl Https (T.unpack mmUrl) mmPort "") -- TODO: hardcoded https?
+  res <- liftIO $ do
+    manager <- liftIO $ newManager tlsManagerSettings
+    T.putStrLn $ "raw message: " <> messageText
+    runExceptT $ hook mmApiKey
+      payload
+      manager (BaseUrl Https (T.unpack mmUrl) mmPort "") -- TODO: hardcoded https?
   case res of
-    Left err        -> liftIO . putStrLn $ "Error: " ++ show err
+    Left err        -> liftIO . putStrLn $ "Error: " <> show err
     Right NoContent -> return ()
   return NoContent
 
