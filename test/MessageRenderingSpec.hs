@@ -1,6 +1,9 @@
 {-# LANGUAGE OverloadedStrings   #-}
 
-module MattermostApiSpec (main, spec) where
+module MessageRenderingSpec
+    ( main
+    , spec
+    ) where
 
 import           Test.Hspec
 import           Test.QuickCheck
@@ -8,7 +11,7 @@ import           Test.QuickCheck.Instances ()
 
 import qualified Data.Text                 as T
 
-import           MattermostApi
+import           MessageRendering
 
 -- ----------------------------------------------
 

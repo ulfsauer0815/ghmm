@@ -15,7 +15,7 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Lib, App, MattermostApi, GithubApi
+  exposed-modules:     Lib, App, MattermostApi, GithubApi, MessageRendering
   build-depends:       base >= 4.7 && < 5
                      , aeson
                      , servant-server
@@ -59,7 +59,7 @@ test-suite ghmm-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Spec.hs
-  other-modules:       MattermostApiSpec
+  other-modules:       MessageRenderingSpec
   build-depends:       base
                      , ghmm
                      , hspec
