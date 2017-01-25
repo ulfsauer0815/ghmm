@@ -31,8 +31,6 @@ main = do
       manager <- newManager tlsManagerSettings
       let context    = AppContext config manager
       run (cfgPort config) $ middleware $ app context
-      putStrLn "wtf"
-      startApp context
     Nothing -> putStrLn "Incomplete/invalid configuration" -- I'm just a Maybe, baby
 
 
