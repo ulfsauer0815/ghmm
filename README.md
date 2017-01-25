@@ -77,7 +77,7 @@ You can start the app directly or create a docker container for it and run that.
 stack exec ghmm-exe     # starts the app on the configured port
 ```
 
-### Option 2: Run as Docker container
+#### Option 2: Run as Docker container
 
 If you want to run the app as a docker container, you can build an image using
 `stack` and run the app with the included docker-compose configuration.
