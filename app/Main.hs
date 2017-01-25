@@ -27,8 +27,7 @@ main = do
             Just secret -> hmacAuth $ defaultAuthSettings secret
             Nothing     -> id
       let middleware = logStdoutDev . optAuthware
-
-      manager <- newManager tlsManagerSettings
+      manager        <- newManager tlsManagerSettings
       let context    = AppContext config manager
       run (cfgPort config) $ middleware $ app context
     Nothing -> putStrLn "Incomplete/invalid configuration" -- I'm just a Maybe, baby
