@@ -5,6 +5,9 @@ module Main where
 import           Network.Wai.Handler.Warp             (run)
 import           Network.Wai.Middleware.RequestLogger
 
+import           Network.HTTP.Client                  (newManager)
+import           Network.HTTP.Client.TLS              (tlsManagerSettings)
+
 import           Control.Monad.Trans.Maybe
 
 import           App
@@ -24,8 +27,12 @@ main = do
             Just secret -> hmacAuth $ defaultAuthSettings secret
             Nothing     -> id
       let middleware = logStdoutDev . optAuthware
-      run (cfgPort config) $ middleware $ app config
-      startApp config
+
+      manager <- newManager tlsManagerSettings
+      let context    = AppContext config manager
+      run (cfgPort config) $ middleware $ app context
+      putStrLn "wtf"
+      startApp context
     Nothing -> putStrLn "Incomplete/invalid configuration" -- I'm just a Maybe, baby
 
 

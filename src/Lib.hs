@@ -30,23 +30,23 @@ import           Mattermost.Github
 server :: ServerT Github.Api App
 server = eventHandler
 
-appToServer :: Configuration -> Server Github.Api
-appToServer cfg = enter (convertApp cfg) server
+appToServer :: AppContext -> Server Github.Api
+appToServer ctx = enter (convertApp ctx) server
 
-convertApp :: Configuration -> App :~> ExceptT ServantErr IO
-convertApp cfg = Nat (flip runReaderT cfg . runApp)
+convertApp :: AppContext -> App :~> ExceptT ServantErr IO
+convertApp ctx = Nat (flip runReaderT ctx . runApp)
 
 -- ----------------------------------------------
 
-startApp :: Configuration -> IO ()
-startApp cfg = run (cfgPort cfg) (app cfg)
+startApp :: AppContext -> IO ()
+startApp ctx = run (cfgPort . ctxConfiguration $ ctx) (app ctx)
 
-app :: Configuration -> Application
-app cfg = serve (Proxy :: Proxy Github.Api) (appToServer cfg)
+app :: AppContext -> Application
+app ctx = serve (Proxy :: Proxy Github.Api) (appToServer ctx)
 
 api :: Proxy Github.Api
-api = Proxy
 
+api = Proxy
 -- ----------------------------------------------
 
 -- TODO: don't block
