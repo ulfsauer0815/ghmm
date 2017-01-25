@@ -4,3 +4,7 @@ packages:
 - '.'
 extra-deps:
 resolver: lts-7.16
+image:
+  container:
+    name: ulfs/ghmm
+    base: fpco/stack-run

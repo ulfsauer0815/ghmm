@@ -1,0 +1,11 @@
+app:
+  image: ulfs/ghmm
+  environment:
+    - PORT=8000
+    - GITHUB_SECRET
+    - MATTERMOST_URL
+    - MATTERMOST_PORT
+    - MATTERMOST_API_KEY
+  command: /usr/local/bin/ghmm-exe
+  ports:
+    - "8000:8000"

@@ -68,15 +68,25 @@ which might not be relevant for you.
 
 ### Start the app
 
-`stack exec ghmm-exe`
+You can start the app directly or create a docker container for it and run that.
 
-Make sure you have configured your environment.
-If it is all set in a file like `config/dev`, then you can just load it
-like this:
+#### Option 1: Run natively
 
-`. config/dev && stack exec ghmm-exe`.
+```sh
+. config/dev            # loads the configuration / environment variables
+stack exec ghmm-exe     # starts the app on the configured port
+```
 
-Now everything should be set up.
+### Option 2: Run as Docker container
+
+If you want to run the app as a docker container, you can build an image using
+`stack` and run the app with the included docker-compose configuration.
+
+```sh
+stack image container   # creates a docker image 'ulfs/ghmm'
+. config/dev            # loads the configuration / environment variables
+docker-compose up -d    # starts the app on port 8000
+```
 
 ### Local Deployment
 
