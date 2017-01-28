@@ -12,8 +12,12 @@ import           Control.Monad.Except     (ExceptT)
 import           Control.Monad.IO.Class
 import           Control.Monad.Reader     (runReaderT)
 
+
 import           Data.Aeson
+import           Data.Monoid
 import           Data.Text                (Text)
+
+import qualified System.Log.Logger        as Log
 
 import           Network.Wai
 import           Network.Wai.Handler.Warp
@@ -53,16 +57,28 @@ api = Proxy
 eventHandler :: Maybe Text -> Value -> App NoContent
 eventHandler eventType jsonEvent = do
   liftIO $ do
-    print eventType
-    print jsonEvent
+    debugM $ "Handling GitHub event type: " <> show eventType
+    debugM $ "Handling GitHub event: " <> show jsonEvent
   case decodeEvent eventType jsonEvent of
-    Just e  -> dispatch e
+    Just e  -> do
+      liftIO . debugM $ "Parsed GitHub event: " <> show e
+      dispatch e
     Nothing -> do
-      liftIO $ putStrLn "warn: unable to parse event"
+      liftIO . warningM $ "Unable to parse GitHub event type: " <> show eventType
       return NoContent
 
 dispatch :: Event -> App NoContent
 dispatch e = do
-  liftIO $ print e
   postEvent e
   return NoContent
+
+-- ----------------------------------------------
+
+modName :: String
+modName = "Lib"
+
+warningM :: String -> IO ()
+warningM = Log.warningM modName
+
+debugM :: String -> IO ()
+debugM = Log.debugM modName

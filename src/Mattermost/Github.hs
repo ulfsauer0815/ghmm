@@ -13,7 +13,8 @@ import           Control.Monad.Trans.Except (runExceptT)
 
 import           Data.Monoid
 import qualified Data.Text                  as T
-import qualified Data.Text.IO               as T
+
+import qualified System.Log.Logger          as Log
 
 import           Servant
 import           Servant.Client
@@ -34,12 +35,12 @@ postEvent e = do
   mmApiKey          <- config cfgMattermostApiKey
   httpClientManager <- asks ctxHttpClientManager
   res <- liftIO $ do
-    T.putStrLn $ "raw message: " <> messageText
+    debugM $ "Posting message to mattermost: " <> T.unpack messageText
     runExceptT $ hook mmApiKey
       payload
       httpClientManager (BaseUrl Https (T.unpack mmUrl) mmPort "") -- TODO: hardcoded https?
   case res of
-    Left err        -> liftIO . putStrLn $ "Error: " <> show err
+    Left err        -> liftIO . errorM $ "Unable to post to mattermost: " <> show err
     Right NoContent -> return ()
   return NoContent
 
@@ -50,3 +51,14 @@ postEvent e = do
     , username = Just "GitHub"
     , icon_url = Just "http://i.imgur.com/NQA4pPs.png"
     }
+
+-- ----------------------------------------------
+
+modName :: String
+modName = "Mattermost.Github"
+
+debugM :: String -> IO ()
+debugM = Log.debugM modName
+
+errorM :: String -> IO ()
+errorM = Log.debugM modName
