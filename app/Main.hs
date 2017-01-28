@@ -16,8 +16,6 @@ import           Network.Wai.Middleware.RequestLogger
 import           Network.HTTP.Client                  (newManager)
 import           Network.HTTP.Client.TLS              (tlsManagerSettings)
 
-import           Control.Monad.Trans.Maybe
-
 import           App
 import           Configuration
 import           HmacMiddleware
@@ -44,7 +42,7 @@ main = do
       errorM "Incomplete/invalid configuration"
 
 
-readConfig :: MaybeT IO Configuration
+readConfig :: ConfigReader Configuration
 readConfig =
   Configuration
     <$> envRead       "PORT"                 `withDef` 8000

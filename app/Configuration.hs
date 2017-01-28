@@ -1,5 +1,6 @@
 module Configuration
-  ( runConfigReader
+  ( ConfigReader
+  , runConfigReader
 
   , env
   , read
@@ -23,28 +24,30 @@ import           System.Environment
 
 -- ----------------------------------------------
 
-runConfigReader :: MaybeT IO cfg -> IO (Maybe cfg)
+type ConfigReader = MaybeT IO
+
+runConfigReader :: ConfigReader cfg -> IO (Maybe cfg)
 runConfigReader = runMaybeT
 
 -- ----------------------------------------------
 
-env :: Text -> MaybeT IO Text
+env :: Text -> ConfigReader Text
 env = env' (return . T.pack)
 
-env' :: (String -> MaybeT IO b) -> Text -> MaybeT IO b
+env' :: (String -> ConfigReader b) -> Text -> ConfigReader b
 env' valToMaybeT key = do
   val <- lift (lookupEnv (T.unpack key)) >>= liftMaybe
   valToMaybeT val
 
 -- XXX: silently defaults if parsing fails
-opt :: (Text -> MaybeT IO a) -> Text -> MaybeT IO (Maybe a)
+opt :: (Text -> ConfigReader a) -> Text -> ConfigReader (Maybe a)
 opt f t = return <$> f t
 
-envBS :: Text -> MaybeT IO ByteString
+envBS :: Text -> ConfigReader ByteString
 envBS = env' (return . BS8.pack)
 
 -- XXX: careful with readEither and non-`Read`able types
-envRead :: Read b => Text -> MaybeT IO b
+envRead :: Read b => Text -> ConfigReader b
 envRead = env' (liftMaybe . eitherToMaybe . TR.readEither)
 
 -- ----------------------------------------------
@@ -55,7 +58,7 @@ liftMaybe = MaybeT . return
 eitherToMaybe :: Either b a -> Maybe a
 eitherToMaybe = either (const Nothing) Just
 
-withDef :: MaybeT IO a -> a -> MaybeT IO a
+withDef :: ConfigReader a -> a -> ConfigReader a
 withDef m def = lift $ runMaybeT m >>= \val ->
     case val of
       Just v  -> return v
