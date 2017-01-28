@@ -1,9 +1,12 @@
 module Configuration
-  ( env
+  ( runConfigReader
+
+  , env
   , read
   , envRead
   , envBS
   , withDef
+  , opt
   ) where
 
 import           Control.Monad.Trans.Class
@@ -20,6 +23,11 @@ import           System.Environment
 
 -- ----------------------------------------------
 
+runConfigReader :: MaybeT IO cfg -> IO (Maybe cfg)
+runConfigReader = runMaybeT
+
+-- ----------------------------------------------
+
 env :: Text -> MaybeT IO Text
 env = env' (return . T.pack)
 
@@ -28,21 +36,16 @@ env' valToMaybeT key = do
   val <- lift (lookupEnv (T.unpack key)) >>= liftMaybe
   valToMaybeT val
 
-envMaybe' :: (Maybe String -> MaybeT IO (Maybe b)) -> Text -> MaybeT IO (Maybe b)
-envMaybe' valToMaybeT key = do
-  val <- lift (lookupEnv (T.unpack key)) >>= (liftMaybe . return)
-  valToMaybeT val
+-- XXX: silently defaults if parsing fails
+opt :: (Text -> MaybeT IO a) -> Text -> MaybeT IO (Maybe a)
+opt f t = return <$> f t
 
-envMaybe :: Text -> MaybeT IO (Maybe Text)
-envMaybe = envMaybe' (return . fmap T.pack)
-
-envBS :: Text -> MaybeT IO (Maybe ByteString)
-envBS = envMaybe' (return . fmap BS8.pack)
+envBS :: Text -> MaybeT IO ByteString
+envBS = env' (return . BS8.pack)
 
 -- XXX: careful with readEither and non-`Read`able types
 envRead :: Read b => Text -> MaybeT IO b
 envRead = env' (liftMaybe . eitherToMaybe . TR.readEither)
-
 
 -- ----------------------------------------------
 

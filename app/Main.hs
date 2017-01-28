@@ -29,7 +29,7 @@ import           Lib
 main :: IO ()
 main = do
   initLoggers DEBUG
-  mbConfig <- runMaybeT loadConfiguration
+  mbConfig <- runConfigReader readConfig
   case mbConfig of
     Just config -> do
       let optAuthware = case cfgGithubSecret config of
@@ -44,15 +44,15 @@ main = do
       errorM "Incomplete/invalid configuration"
 
 
-loadConfiguration :: MaybeT IO Configuration
-loadConfiguration =
+readConfig :: MaybeT IO Configuration
+readConfig =
   Configuration
-    <$> envRead    "PORT"                 `withDef` 8000
-    <*> envRead    "LOGLEVEL"             `withDef` Log.ERROR
-    <*> envBS      "GITHUB_SECRET"        `withDef` Nothing
-    <*> env        "MATTERMOST_URL"
-    <*> envRead    "MATTERMOST_PORT"
-    <*> env        "MATTERMOST_API_KEY"
+    <$> envRead       "PORT"                 `withDef` 8000
+    <*> envRead       "LOGLEVEL"             `withDef` Log.ERROR
+    <*> envBS   `opt` "GITHUB_SECRET"        `withDef` Nothing
+    <*> env           "MATTERMOST_URL"
+    <*> envRead       "MATTERMOST_PORT"
+    <*> env           "MATTERMOST_API_KEY"
 
 
 initLoggers :: Priority -> IO ()
