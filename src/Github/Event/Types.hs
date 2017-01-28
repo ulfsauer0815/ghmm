@@ -11,6 +11,8 @@ module Github.Event.Types
     , Issue(..)
     , Comment(..)
     , User(..)
+
+    , parseJSON'
     ) where
 
 import           GHC.Generics
@@ -55,6 +57,8 @@ data Event
     , ecoRepository :: Repository
     } deriving (Eq, Show, Generic)
 
+instance FromJSON Event where
+  parseJSON = genericParseJSON jsonParseOpts
 
 data Commit = Commit
   { cmtId      :: Text
@@ -123,7 +127,16 @@ instance FromJSON Issue where
 
 
 -- TODO: smarter way to detect prefix (for camel and snake case)
-jsonParseOpts = defaultOptions { fieldLabelModifier = labelModifier }
+jsonParseOpts = defaultOptions
+  { fieldLabelModifier = labelModifier
+  ,sumEncoding = ObjectWithSingleField
+  }
   where
   labelModifier name = let (x:xs) = drop 3 name in switchCase x : xs -- XXX: don't forget the prefix or BOOM
   switchCase a = if isUpper a then toLower a else toUpper a
+
+injectConstructor :: Text -> Value -> Value
+injectConstructor h o = object [h .= o]
+
+parseJSON' :: FromJSON a => Text -> Value -> Maybe a
+parseJSON' c = parseMaybe $ parseJSON . injectConstructor c
