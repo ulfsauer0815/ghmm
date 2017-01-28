@@ -38,8 +38,9 @@ main = do
       let middleware = logStdoutDev . optAuthware
       manager        <- newManager tlsManagerSettings
       let context    = AppContext config manager
+      putStrLn $ "Starting ghmm (port " ++ (show . cfgPort $ config) ++ ")"
       run (cfgPort config) $ middleware $ app context
-    Nothing -> do
+    Nothing ->
       errorM "Incomplete/invalid configuration"
 
 
