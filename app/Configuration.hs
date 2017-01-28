@@ -2,7 +2,7 @@ module Configuration
   ( env
   , read
   , envRead
-  , envMaybeBS
+  , envBS
   , withDef
   ) where
 
@@ -36,8 +36,8 @@ envMaybe' valToMaybeT key = do
 envMaybe :: Text -> MaybeT IO (Maybe Text)
 envMaybe = envMaybe' (return . fmap T.pack)
 
-envMaybeBS :: Text -> MaybeT IO (Maybe ByteString)
-envMaybeBS = envMaybe' (return . fmap BS8.pack)
+envBS :: Text -> MaybeT IO (Maybe ByteString)
+envBS = envMaybe' (return . fmap BS8.pack)
 
 -- XXX: careful with readEither and non-`Read`able types
 envRead :: Read b => Text -> MaybeT IO b

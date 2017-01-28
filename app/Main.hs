@@ -49,7 +49,7 @@ loadConfiguration =
   Configuration
     <$> envRead    "PORT"                 `withDef` 8000
     <*> envRead    "LOGLEVEL"             `withDef` Log.ERROR
-    <*> envMaybeBS "GITHUB_SECRET"
+    <*> envBS      "GITHUB_SECRET"        `withDef` Nothing
     <*> env        "MATTERMOST_URL"
     <*> envRead    "MATTERMOST_PORT"
     <*> env        "MATTERMOST_API_KEY"
