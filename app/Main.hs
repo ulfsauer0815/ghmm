@@ -2,6 +2,8 @@
 
 module Main where
 
+import           System.IO
+
 import           Network.Wai.Handler.Warp             (run)
 import           Network.Wai.Middleware.RequestLogger
 
@@ -30,7 +32,7 @@ main = do
       manager        <- newManager tlsManagerSettings
       let context    = AppContext config manager
       run (cfgPort config) $ middleware $ app context
-    Nothing -> putStrLn "Incomplete/invalid configuration" -- I'm just a Maybe, baby
+    Nothing -> hPutStrLn stderr "Incomplete/invalid configuration" -- I'm just a Maybe, baby
 
 
 loadConfiguration :: MaybeT IO Configuration
