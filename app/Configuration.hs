@@ -3,6 +3,7 @@ module Configuration
   , read
   , envRead
   , envMaybeBS
+  , withDef
   ) where
 
 import           Control.Monad.Trans.Class
@@ -50,3 +51,9 @@ liftMaybe = MaybeT . return
 
 eitherToMaybe :: Either b a -> Maybe a
 eitherToMaybe = either (const Nothing) Just
+
+withDef :: MaybeT IO a -> a -> MaybeT IO a
+withDef m def = lift $ runMaybeT m >>= \val ->
+    case val of
+      Just v  -> return v
+      Nothing -> return def

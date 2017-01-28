@@ -48,6 +48,7 @@ loadConfiguration :: MaybeT IO Configuration
 loadConfiguration =
   Configuration
     <$> envRead    "PORT"
+    <*> envRead    "LOGLEVEL"             `withDef` Log.ERROR
     <*> envMaybeBS "GITHUB_SECRET"
     <*> env        "MATTERMOST_URL"
     <*> envRead    "MATTERMOST_PORT"

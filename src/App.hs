@@ -6,6 +6,8 @@ module App where
 import           Control.Monad.Except (ExceptT, MonadError)
 import           Control.Monad.Reader (MonadIO, MonadReader, ReaderT, asks)
 
+import           System.Log           (Priority)
+
 import           Data.ByteString      (ByteString)
 import           Data.Text            (Text)
 
@@ -27,6 +29,7 @@ data AppContext = AppContext
 
 data Configuration = Configuration
  { cfgPort             :: Int
+ , cfgPriority         :: Priority
  , cfgGithubSecret     :: Maybe ByteString
  , cfgMattermostUrl    :: Text
  , cfgMattermostPort   :: Int
