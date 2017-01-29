@@ -143,8 +143,8 @@ jsonParseOpts = defaultOptions
 injectConstructor :: Text -> Value -> Value
 injectConstructor h o = object [h .= o]
 
-parseJSON' :: FromJSON a => Text -> Value -> Maybe a
-parseJSON' c = parseMaybe $ parseJSON . injectConstructor c
+parseJSON' :: FromJSON a => Text -> Value -> Either String a
+parseJSON' c = parseEither $ parseJSON . injectConstructor c
 
 -- ----------------------------------------------
 

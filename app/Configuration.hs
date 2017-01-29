@@ -22,6 +22,8 @@ import qualified Data.Text                 as T
 
 import           System.Environment
 
+import           Util
+
 -- ----------------------------------------------
 
 type ConfigReader = MaybeT IO
@@ -54,9 +56,6 @@ envRead = env' (liftMaybe . eitherToMaybe . TR.readEither)
 
 liftMaybe :: (Monad m) => Maybe a -> MaybeT m a
 liftMaybe = MaybeT . return
-
-eitherToMaybe :: Either b a -> Maybe a
-eitherToMaybe = either (const Nothing) Just
 
 withDef :: ConfigReader a -> a -> ConfigReader a
 withDef m def = lift $ runMaybeT m >>= \val ->

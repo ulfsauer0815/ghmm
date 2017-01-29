@@ -11,11 +11,14 @@ import           Test.QuickCheck.Instances ()
 import           Data.Aeson
 import           Data.ByteString.Lazy      (ByteString)
 import qualified Data.ByteString.Lazy      as BL
+import           Data.Either
 import           Data.Maybe
 import           Data.Text                 (Text)
 
 import           Github.Event.Json
 import           Github.Event.Types
+
+import           Util
 
 -- ----------------------------------------------
 
@@ -38,11 +41,12 @@ spec =
 loadAndCheckEvent :: String -> Text -> IO Event
 loadAndCheckEvent file header = do
   json <- loadFile file
-  let valueMb = decode json
+  let valueMb = decode json :: Maybe Value
   valueMb `shouldSatisfy` isJust
-  let eventMb = valueMb >>= decodeEvent header
-  eventMb `shouldSatisfy` isJust
-  return $ fromJust eventMb
+  let value = fromJust valueMb
+  let eventEt = decodeEvent header value :: Either String Event
+  eventEt `shouldSatisfy` isRight
+  return $ fromRight eventEt
 
 loadFile :: String -> IO ByteString
 loadFile relPath = BL.readFile $ "test/data/" ++ relPath

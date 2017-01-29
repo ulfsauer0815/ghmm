@@ -65,11 +65,14 @@ eventHandler eventTypeHeader jsonEvent =
         debugM $ "Handling GitHub event type: " <> show eventType
         debugM $ "Handling GitHub event: " <> show jsonEvent
       case decodeEvent eventType jsonEvent of
-        Just e  -> do
+        Right e  -> do
           liftIO . debugM $ "Parsed GitHub event: " <> show e
           dispatch e
-        Nothing -> do
-          liftIO . warningM $ "Unable to parse GitHub event type: " <> show eventType
+        Left msg -> do
+          liftIO . warningM $
+            "Unable to parse GitHub event type \""
+              <> show eventType <> "\": "
+              <> msg 
           return NoContent
 
 dispatch :: Event -> App NoContent
