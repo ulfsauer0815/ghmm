@@ -12,6 +12,12 @@ category:            Web
 build-type:          Simple
 -- extra-source-files:
 cabal-version:       >=1.10
+-- http://stackoverflow.com/questions/29361413/including-data-files-only-in-cabal-test-suites
+-- https://github.com/commercialhaskell/stack/issues/548
+extra-source-files:  test/data/pushevent.json
+                   , test/data/pullrequestevent.json
+                   , test/data/statusevent.json
+                   , test/data/issuecommentevent.json
 
 library
   hs-source-dirs:      src
@@ -84,8 +90,6 @@ test-suite ghmm-test
                      , text
                      , bytestring
                      , aeson
-  -- http://stackoverflow.com/questions/29361413/including-data-files-only-in-cabal-test-suites
-  extra-source-files:  pushevent.json
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
 
