@@ -29,27 +29,27 @@ spec :: Spec
 spec =
   describe "Github.Event.Json.decodeEvent" $ do
     it "decodes \"push\" event" $ do
-      event <- loadAndCheckEvent "pushevent.json" "push"
+      event <- loadAndCheckEvent "push.json" "push"
       event `shouldSatisfy` isPushEvent
 
     it "decodes \"pull_request\" event" $ do
-      event <- loadAndCheckEvent "pullrequestevent.json" "pull_request"
+      event <- loadAndCheckEvent "pullrequest.json" "pull_request"
       event `shouldSatisfy` isPullRequestEvent
 
     it "decodes \"status\" event" $ do
-      event <- loadAndCheckEvent "statusevent.json" "status"
+      event <- loadAndCheckEvent "status.json" "status"
       event `shouldSatisfy` isStatusEvent
 
     it "decodes \"issue_comment\" event" $ do
-      event <- loadAndCheckEvent "issuecommentevent.json" "issue_comment"
+      event <- loadAndCheckEvent "issuecomment.json" "issue_comment"
       event `shouldSatisfy` isIssueCommentEvent
 
     it "decodes \"pull_request_review\" event" $ do
-      event <- loadAndCheckEvent "pullrequestreviewevent.json" "pull_request_review"
+      event <- loadAndCheckEvent "pullrequestreview.json" "pull_request_review"
       event `shouldSatisfy` isPullRequestReviewEvent
 
     it "decodes \"pull_request_review_comment\" event" $ do
-      event <- loadAndCheckEvent "pullrequestreviewcommentevent.json" "pull_request_review_comment"
+      event <- loadAndCheckEvent "pullrequestreviewcomment.json" "pull_request_review_comment"
       event `shouldSatisfy` isPullRequestReviewCommentEvent
 
 -- ----------------------------------------------
@@ -65,4 +65,4 @@ loadAndCheckEvent file header = do
   return $ fromRight eventEt
 
 loadFile :: String -> IO ByteString
-loadFile relPath = BL.readFile $ "test/data/" ++ relPath
+loadFile relPath = BL.readFile $ "test/data/event/" ++ relPath

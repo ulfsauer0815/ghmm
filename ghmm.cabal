@@ -14,12 +14,12 @@ build-type:          Simple
 cabal-version:       >=1.10
 -- http://stackoverflow.com/questions/29361413/including-data-files-only-in-cabal-test-suites
 -- https://github.com/commercialhaskell/stack/issues/548
-extra-source-files:  test/data/pushevent.json
-                   , test/data/pullrequestevent.json
-                   , test/data/statusevent.json
-                   , test/data/issuecommentevent.json
-                   , test/data/pullrequestreviewevent.json
-                   , test/data/pullrequestreviewcommentevent.json
+extra-source-files:  test/data/event/push.json
+                   , test/data/event/pullrequest.json
+                   , test/data/event/status.json
+                   , test/data/event/issuecomment.json
+                   , test/data/event/pullrequestreview.json
+                   , test/data/event/pullrequestreviewcomment.json
 
 library
   hs-source-dirs:      src
