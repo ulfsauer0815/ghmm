@@ -18,6 +18,8 @@ extra-source-files:  test/data/pushevent.json
                    , test/data/pullrequestevent.json
                    , test/data/statusevent.json
                    , test/data/issuecommentevent.json
+                   , test/data/pullrequestreviewevent.json
+                   , test/data/pullrequestreviewcommentevent.json
 
 library
   hs-source-dirs:      src
