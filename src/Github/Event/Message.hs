@@ -32,7 +32,7 @@ renderMessageText event
       repoPrefix repository
        <> modifyIfPresent ("Status: " <> state) statusUrl link
        <> ifPresent description (": "  <>)
-    CommentEvent action (Issue state issueHtmlUrl issueUser) (Comment commentHtmlUrl commentBody commentUser) repository ->
+    IssueCommentEvent action (Issue state issueHtmlUrl issueUser) (Comment commentHtmlUrl commentBody commentUser) repository ->
       repoPrefix repository
        <> link ("Comment " <> italic action <> " (" <> usrLogin commentUser <> ")") commentHtmlUrl
        <> ": " <> shortenCommentMessage commentBody

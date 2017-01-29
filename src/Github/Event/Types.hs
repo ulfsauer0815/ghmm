@@ -55,7 +55,7 @@ data Event
     , estStatus_url  :: Maybe Text
     , estRepository  :: Repository
     }
-  | CommentEvent
+  | IssueCommentEvent
     { ecoAction     :: Text
     , ecoIssue      :: Issue
     , ecoComment    :: Comment
@@ -157,5 +157,5 @@ isPullRequestEvent _                  = False
 isStatusEvent StatusEvent{} = True
 isStatusEvent _             = False
 
-isIssueCommentEvent CommentEvent{} = True
-isIssueCommentEvent _              = False
+isIssueCommentEvent IssueCommentEvent{} = True
+isIssueCommentEvent _                   = False

@@ -22,7 +22,7 @@ headerToConstructor = flip M.lookup mapping
     [ ("push",          "PushEvent")
     , ("pull_request",  "PullRequestEvent")
     , ("status",        "StatusEvent")
-    , ("issue_comment", "CommentEvent")
+    , ("issue_comment", "IssueCommentEvent")
     ]
 
 
