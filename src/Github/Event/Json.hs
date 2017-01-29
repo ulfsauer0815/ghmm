@@ -26,11 +26,11 @@ headerToConstructor = flip M.lookup mapping
     ]
 
 
-decodeEvent :: Maybe Text -> Value -> Maybe Event
-decodeEvent eventTypeMb v =
-  case eventTypeMb >>= headerToConstructor of
+decodeEvent :: Text -> Value -> Maybe Event
+decodeEvent eventType v =
+  case headerToConstructor eventType of
     Just constructor -> parseJSON' constructor v
-    Nothing          -> fail "unhandled event type or no type given"
+    Nothing          -> fail "unknown event type"
 
 
 injectHeader :: Text -> Value -> Value

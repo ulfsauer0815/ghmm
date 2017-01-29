@@ -55,17 +55,22 @@ api = Proxy
 
 -- TODO: don't block
 eventHandler :: Maybe Text -> Value -> App NoContent
-eventHandler eventType jsonEvent = do
-  liftIO $ do
-    debugM $ "Handling GitHub event type: " <> show eventType
-    debugM $ "Handling GitHub event: " <> show jsonEvent
-  case decodeEvent eventType jsonEvent of
-    Just e  -> do
-      liftIO . debugM $ "Parsed GitHub event: " <> show e
-      dispatch e
+eventHandler eventTypeHeader jsonEvent =
+  case eventTypeHeader of
     Nothing -> do
-      liftIO . warningM $ "Unable to parse GitHub event type: " <> show eventType
-      return NoContent
+      liftIO $ warningM "request without X-Github-Event header"
+      throwError $ err400 { errBody = "X-Github-Event header missing" }
+    Just eventType -> do
+      liftIO $ do
+        debugM $ "Handling GitHub event type: " <> show eventType
+        debugM $ "Handling GitHub event: " <> show jsonEvent
+      case decodeEvent eventType jsonEvent of
+        Just e  -> do
+          liftIO . debugM $ "Parsed GitHub event: " <> show e
+          dispatch e
+        Nothing -> do
+          liftIO . warningM $ "Unable to parse GitHub event type: " <> show eventType
+          return NoContent
 
 dispatch :: Event -> App NoContent
 dispatch e = do
