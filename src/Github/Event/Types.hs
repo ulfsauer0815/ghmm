@@ -51,8 +51,8 @@ data Event
   | StatusEvent
     { estSha         :: Text
     , estState       :: Text
-    , estDescription :: Text
-    , estStatus_url  :: Text
+    , estDescription :: Maybe Text
+    , estStatus_url  :: Maybe Text
     , estRepository  :: Repository
     }
   | CommentEvent

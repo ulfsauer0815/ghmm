@@ -30,8 +30,8 @@ renderMessageText event
        <> title
     StatusEvent sha state description statusUrl repository ->
       repoPrefix repository
-       <> link ("Status: " <> state) statusUrl
-       <> ": " <> description
+       <> modifyIfPresent ("Status: " <> state) statusUrl link
+       <> ifPresent description (": "  <>)
     CommentEvent action (Issue state issueHtmlUrl issueUser) (Comment commentHtmlUrl commentBody commentUser) repository ->
       repoPrefix repository
        <> link ("Comment " <> italic action <> " (" <> usrLogin commentUser <> ")") commentHtmlUrl
@@ -44,3 +44,5 @@ renderMessageText event
   shortenCommitMessage = shorten 50 "..." . firstLine
   shortenCommentMessage = shorten 72 "..." . firstLine -- XXX: cuts off multilines without marker
   firstLine = T.takeWhile (/= '\n')
+  ifPresent e f = maybe mempty f e
+  modifyIfPresent t eMb f = maybe t (f t) eMb
