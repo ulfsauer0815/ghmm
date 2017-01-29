@@ -44,10 +44,5 @@ loadAndCheckEvent file header = do
   eventMb `shouldSatisfy` isJust
   return $ fromJust eventMb
 
-parseEvent :: Text -> ByteString -> Maybe Event
-parseEvent header rawJson = do
-  event <- decode rawJson :: Maybe Value
-  decodeEvent header event
-
 loadFile :: String -> IO ByteString
 loadFile relPath = BL.readFile $ "test/data/" ++ relPath
