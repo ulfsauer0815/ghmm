@@ -69,12 +69,12 @@ self-explanatory.
 
 | Variable             | Description
 | -------------------- | ----------------------------------------------------- |
-| `PORT`               | Port to start ghmm on                                 |
-| `LOG_LEVEL`          | Log level\*                                          |
-| `GITHUB_SECRET`      | The secret you chose to share between GitHub and ghmm |
-| `MATTERMOST_URL`     | The full url where ghmm is available                  |
-| `MATTERMOST_PORT`    | Port where Mattermost is available, usually 443       |
-| `MATTERMOST_API_KEY` | The value at the end of the incoming webhook url      |
+| `PORT`               | Port to start ghmm on (default: `8000`)               |
+| `LOG_LEVEL`          | Log level (default: `ERROR`)\*                        |
+| `GITHUB_SECRET`      | Secret you chose to share between GitHub and ghmm     |
+| `MATTERMOST_URL`     | URL where Mattermost is available                     |
+| `MATTERMOST_PORT`    | Port on which Mattermost is available, usually `443`  |
+| `MATTERMOST_API_KEY` | Value at the end of the incoming webhook url          |
 
 See `config/dev.example` for how this might look like.
 
