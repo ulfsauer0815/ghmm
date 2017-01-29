@@ -24,10 +24,14 @@ main = hspec spec
 
 spec :: Spec
 spec =
-  describe "Github.Event.Json.decodeEvent" $
+  describe "Github.Event.Json.decodeEvent" $ do
     it "decodes \"push\" event" $ do
       event <- loadAndCheckEvent "pushevent.json" "push"
       event `shouldSatisfy` isPushEvent
+
+    it "decodes \"pull_request\" event" $ do
+      event <- loadAndCheckEvent "pullrequestevent.json" "pull_request"
+      event `shouldSatisfy` isPullRequestEvent
 
 -- ----------------------------------------------
 
