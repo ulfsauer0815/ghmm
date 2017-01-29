@@ -49,7 +49,7 @@ readConfig =
     <*> envRead       "LOG_LEVEL"            `withDef` Log.ERROR
     <*> envBS   `opt` "GITHUB_SECRET"        `withDef` Nothing
     <*> env           "MATTERMOST_URL"
-    <*> envRead       "MATTERMOST_PORT"
+    <*> envRead       "MATTERMOST_PORT"      `withDef` 443
     <*> env           "MATTERMOST_API_KEY"
 
 
