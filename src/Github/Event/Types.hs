@@ -11,6 +11,7 @@ module Github.Event.Types
     , Issue(..)
     , Comment(..)
     , User(..)
+    , Review(..)
 
     , parseJSON'
 
@@ -18,6 +19,7 @@ module Github.Event.Types
     , isPullRequestEvent
     , isStatusEvent
     , isIssueCommentEvent
+    , isPullRequestReviewEvent
     ) where
 
 import           GHC.Generics
@@ -60,6 +62,12 @@ data Event
     , ecoIssue      :: Issue
     , ecoComment    :: Comment
     , ecoRepository :: Repository
+    }
+  | PullRequestReviewEvent
+    { epvAction       :: Text
+    , epvReview       :: Review
+    , epvPull_request :: PullRequest
+    , epvRepository   :: Repository
     } deriving (Eq, Show, Generic)
 
 instance FromJSON Event where
@@ -92,7 +100,8 @@ instance ToJSON Pusher
 
 {-# ANN type PullRequest ("HLint: ignore Use camelCase" :: Text) #-}
 data PullRequest = PullRequest
-  { purHtml_url :: Text
+  { purNumber   :: Int
+  , purHtml_url :: Text
   , purState    :: Text
   , purTitle    :: Text
   } deriving (Eq, Show, Generic)
@@ -130,6 +139,17 @@ data Issue = Issue
 instance FromJSON Issue where
   parseJSON = genericParseJSON jsonParseOpts
 
+{-# ANN type Review ("HLint: ignore Use camelCase" :: Text) #-}
+data Review = Review
+  { revHtml_url     :: Text
+  , revBody         :: Text
+  , revState        :: Text
+  , revUser         :: User
+  } deriving (Eq, Show, Generic)
+
+instance FromJSON Review where
+  parseJSON = genericParseJSON jsonParseOpts
+
 
 -- TODO: smarter way to detect prefix (for camel and snake case)
 jsonParseOpts = defaultOptions
@@ -159,3 +179,6 @@ isStatusEvent _             = False
 
 isIssueCommentEvent IssueCommentEvent{} = True
 isIssueCommentEvent _                   = False
+
+isPullRequestReviewEvent PullRequestReviewEvent{} = True
+isPullRequestReviewEvent _                        = False

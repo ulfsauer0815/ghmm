@@ -12,6 +12,7 @@ module Github.Api
     , Issue(..)
     , Comment(..)
     , User(..)
+    , Review(..)
     ) where
 
 import           Data.Aeson
