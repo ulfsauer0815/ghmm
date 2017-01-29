@@ -8,6 +8,20 @@ A GitHub event bot for Mattermost.
 
 Relays GitHub webhook events to your Mattermost incoming webhook.
 
+## Supported Events
+
+Only a subset of the [GitHub events](https://developer.github.com/v3/activity/events/types/)
+are supported right now.
+
+- [PushEvent](https://developer.github.com/v3/activity/events/types/#pushevent)
+- [PullRequestEvent](https://developer.github.com/v3/activity/events/types/#pullrequestevent)
+- [PullRequestReviewEvent](https://developer.github.com/v3/activity/events/types/#pullrequestreviewevent)
+- [PullRequestReviewCommentEvent](https://developer.github.com/v3/activity/events/types/#pullrequestreviewcommentevent)
+- [IssueCommentEvent](https://developer.github.com/v3/activity/events/types/#issuecommentevent)
+- [StatusEvent](https://developer.github.com/v3/activity/events/types/#statusevent)
+
+Feel free to open a pull request or an issue if you need support for an event.
+
 # Setup
 
 ## Create a GitHub Webhook
