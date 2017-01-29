@@ -40,6 +40,10 @@ spec =
       event <- loadAndCheckEvent "statusevent.json" "status"
       event `shouldSatisfy` isStatusEvent
 
+    it "decodes \"issue_comment\" event" $ do
+      event <- loadAndCheckEvent "issuecommentevent.json" "issue_comment"
+      event `shouldSatisfy` isIssueCommentEvent
+
 -- ----------------------------------------------
 
 loadAndCheckEvent :: String -> Text -> IO Event
