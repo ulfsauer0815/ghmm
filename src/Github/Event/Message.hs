@@ -40,6 +40,10 @@ renderMessageText event
       repoPrefix repository
        <> link ("Pull Request #" <> (T.pack . show) number <> " Review " <> italic action <> " (" <> usrLogin rvUser <> ")") rvHtmlUrl
        <> ": " <> shortenCommentMessage rvBody
+    PullRequestReviewCommentEvent action (Comment commentHtmlUrl commentBody commentUser) (PullRequest number htmlUrl state title) repository ->
+       repoPrefix repository
+        <> link ("Pull Request #" <> (T.pack . show) number <> " Review Comment " <> italic action <> " (" <> usrLogin commentUser <> ")") commentHtmlUrl
+        <> ": " <> shortenCommentMessage commentBody
   where
     -- XXX: hardcoded master branch, use payload default branch data
   optBranch ref = if ref /= "refs/heads/master" then "on " <> lastSegment ref <> ", " else ""

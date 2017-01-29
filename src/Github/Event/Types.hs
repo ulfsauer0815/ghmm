@@ -20,6 +20,7 @@ module Github.Event.Types
     , isStatusEvent
     , isIssueCommentEvent
     , isPullRequestReviewEvent
+    , isPullRequestReviewCommentEvent
     ) where
 
 import           GHC.Generics
@@ -64,10 +65,16 @@ data Event
     , ecoRepository :: Repository
     }
   | PullRequestReviewEvent
-    { epvAction       :: Text
-    , epvReview       :: Review
-    , epvPull_request :: PullRequest
-    , epvRepository   :: Repository
+    { ervAction       :: Text
+    , ervReview       :: Review
+    , ervPull_request :: PullRequest
+    , ervRepository   :: Repository
+    }
+  | PullRequestReviewCommentEvent
+    { ercAction       :: Text
+    , ercComment      :: Comment
+    , ercPull_request :: PullRequest
+    , ercRepository   :: Repository
     } deriving (Eq, Show, Generic)
 
 instance FromJSON Event where
@@ -182,3 +189,6 @@ isIssueCommentEvent _                   = False
 
 isPullRequestReviewEvent PullRequestReviewEvent{} = True
 isPullRequestReviewEvent _                        = False
+
+isPullRequestReviewCommentEvent PullRequestReviewCommentEvent{} = True
+isPullRequestReviewCommentEvent _                               = False
