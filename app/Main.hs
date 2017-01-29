@@ -46,7 +46,7 @@ readConfig :: ConfigReader Configuration
 readConfig =
   Configuration
     <$> envRead       "PORT"                 `withDef` 8000
-    <*> envRead       "LOGLEVEL"             `withDef` Log.ERROR
+    <*> envRead       "LOG_LEVEL"            `withDef` Log.ERROR
     <*> envBS   `opt` "GITHUB_SECRET"        `withDef` Nothing
     <*> env           "MATTERMOST_URL"
     <*> envRead       "MATTERMOST_PORT"

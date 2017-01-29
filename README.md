@@ -70,6 +70,7 @@ self-explanatory.
 | Variable             | Description
 | -------------------- | ----------------------------------------------------- |
 | `PORT`               | Port to start ghmm on                                 |
+| `LOG_LEVEL`          | Log level\*                                          |
 | `GITHUB_SECRET`      | The secret you chose to share between GitHub and ghmm |
 | `MATTERMOST_URL`     | The full url where ghmm is available                  |
 | `MATTERMOST_PORT`    | Port where Mattermost is available, usually 443       |
@@ -79,6 +80,9 @@ See `config/dev.example` for how this might look like.
 
 Note that this example config also includes values for the development scripts,
 which might not be relevant for you.
+
+\* Accepted values:
+`DEBUG`, `INFO`, `NOTICE`, `WARNING`, `ERROR`, `CRITICAL`, `ALERT`, `EMERGENCY`
 
 ### Start the app
 

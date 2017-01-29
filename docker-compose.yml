@@ -2,6 +2,7 @@ app:
   image: ulfs/ghmm
   environment:
     - PORT=8000
+    - LOG_LEVEL
     - GITHUB_SECRET
     - MATTERMOST_URL
     - MATTERMOST_PORT
