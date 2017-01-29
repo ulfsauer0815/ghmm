@@ -38,7 +38,9 @@ spec =
 loadAndCheckEvent :: String -> Text -> IO Event
 loadAndCheckEvent file header = do
   json <- loadFile file
-  let eventMb = parseEvent header json :: Maybe Event
+  let valueMb = decode json
+  valueMb `shouldSatisfy` isJust
+  let eventMb = valueMb >>= decodeEvent header
   eventMb `shouldSatisfy` isJust
   return $ fromJust eventMb
 
