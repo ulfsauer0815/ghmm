@@ -27,8 +27,10 @@ spec =
   describe "Github.Event.Json.decodeEvent" $
     it "decodes \"push\" event" $ do
       json <- loadFile "pushevent.json"
-      let event = parseEvent "push" json :: Maybe Event
-      event `shouldSatisfy` isJust
+      let eventMb = parseEvent "push" json :: Maybe Event
+      eventMb `shouldSatisfy` isJust
+      let event = fromJust eventMb
+      event `shouldSatisfy` isPushEvent
 
 -- ----------------------------------------------
 

@@ -13,6 +13,11 @@ module Github.Event.Types
     , User(..)
 
     , parseJSON'
+
+    , isPushEvent
+    , isPullRequestEvent
+    , isStatusEvent
+    , isIssueCommentEvent
     ) where
 
 import           GHC.Generics
@@ -140,3 +145,17 @@ injectConstructor h o = object [h .= o]
 
 parseJSON' :: FromJSON a => Text -> Value -> Maybe a
 parseJSON' c = parseMaybe $ parseJSON . injectConstructor c
+
+-- ----------------------------------------------
+
+isPushEvent PushEvent{} = True
+isPushEvent _           = False
+
+isPullRequestEvent PullRequestEvent{} = True
+isPullRequestEvent _                  = False
+
+isStatusEvent StatusEvent{} = True
+isStatusEvent _             = False
+
+isIssueCommentEvent CommentEvent{} = True
+isIssueCommentEvent _              = False
