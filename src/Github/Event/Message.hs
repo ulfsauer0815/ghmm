@@ -10,7 +10,6 @@ import qualified Data.Text        as T
 
 import           Github.Api
 import           Message.Markdown
-import           Message.Util
 
 -- ----------------------------------------------
 
@@ -22,7 +21,7 @@ renderMessageText event
        <> "Push ("
        <> optBranch ref
        <> (T.pack . show . length $ commits) <> "): "
-       <> link (quote (shortenCommitMessage $ cmtMessage headCommit)) compare
+       <> link (quote (firstLine $ cmtMessage headCommit)) compare
     PullRequestEvent action _ (PullRequest number htmlUrl state title) repository ->
       repoPrefix repository
        <> link ("PR #" <> (T.pack . show) number <> " - " <> state) htmlUrl
@@ -35,22 +34,20 @@ renderMessageText event
     IssueCommentEvent action (Issue state issueHtmlUrl issueUser) (Comment commentHtmlUrl commentBody commentUser) repository ->
       repoPrefix repository
        <> link ("Comment " <> italic action <> " (" <> usrLogin commentUser <> ")") commentHtmlUrl
-       <> ": " <> shortenCommentMessage commentBody
+       <> ": " <> firstLine commentBody
     PullRequestReviewEvent action (Review rvHtmlUrl rvBody rvState rvUser) (PullRequest number prHtmlUrl prState title) repository ->
       repoPrefix repository
        <> link ("PR #" <> (T.pack . show) number <> " Review " <> italic action <> " (" <> usrLogin rvUser <> ")") rvHtmlUrl
-       <> ": " <> shortenCommentMessage rvBody
+       <> ": " <> firstLine rvBody
     PullRequestReviewCommentEvent action (Comment commentHtmlUrl commentBody commentUser) (PullRequest number htmlUrl state title) repository ->
        repoPrefix repository
         <> link ("PR #" <> (T.pack . show) number <> " Review Comment " <> italic action <> " (" <> usrLogin commentUser <> ")") commentHtmlUrl
-        <> ": " <> shortenCommentMessage commentBody
+        <> ": " <> firstLine commentBody
   where
     -- XXX: hardcoded master branch, use payload default branch data
   optBranch ref = if ref /= "refs/heads/master" then "on " <> lastSegment ref <> ", " else ""
   lastSegment = last . T.splitOn "/"
   repoPrefix repo = "[" <> link (repName repo) (repHtml_url repo) <> "] "
-  shortenCommitMessage = shorten 50 "..." . firstLine
-  shortenCommentMessage = shorten 72 "..." . firstLine -- XXX: cuts off multilines without marker
   firstLine = T.takeWhile (/= '\n')
   ifPresent e f = maybe mempty f e
   modifyIfPresent t eMb f = maybe t (f t) eMb
