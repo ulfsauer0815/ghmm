@@ -5,6 +5,7 @@ module Github.Event.Message
     ) where
 
 import           Data.Monoid
+import           Data.Maybe
 import           Data.Text        (Text)
 import qualified Data.Text        as T
 
@@ -21,16 +22,17 @@ renderMessageText event
        <> "Push ("
        <> optBranch ref
        <> (T.pack . show . length $ commits) <> "): "
-       <> link (quote (firstLine $ cmtMessage headCommit)) compare
+       <> link (quote (firstLine $ pcmMessage headCommit)) compare
     PullRequestEvent action _ (PullRequest number htmlUrl state title) repository ->
       repoPrefix repository
        <> link ("PR #" <> (T.pack . show) number <> " - " <> state) htmlUrl
        <> " " <> italic action <> ": "
        <> title
-    StatusEvent sha state description statusUrl repository ->
-      repoPrefix repository
-       <> modifyIfPresent ("Status: " <> state) statusUrl link
-       <> ifPresent description (": "  <>)
+    StatusEvent _ state description (Commit sha commitUrl) targetUrl repository ->
+      let htmlUrl = fromMaybe commitUrl targetUrl
+      in  repoPrefix repository
+           <> link ("Status (" <> shaify sha <> ")") htmlUrl <> ": " <> italic state
+           <> ifPresent description (": "  <>)
     IssueCommentEvent action (Issue state issueHtmlUrl issueUser) (Comment commentHtmlUrl commentBody commentUser) repository ->
       repoPrefix repository
        <> link ("Comment " <> italic action <> " (" <> usrLogin commentUser <> ")") commentHtmlUrl
@@ -51,3 +53,4 @@ renderMessageText event
   firstLine = T.takeWhile (/= '\n')
   ifPresent e f = maybe mempty f e
   modifyIfPresent t eMb f = maybe t (f t) eMb
+  shaify t = "#" <> T.take 7 t

@@ -7,6 +7,7 @@ module Github.Api
 
     , Event(..)
     , Commit(..)
+    , PushCommit(..)
     , Repository(..)
     , PullRequest(..)
     , Issue(..)

@@ -6,6 +6,7 @@
 module Github.Event.Types
     ( Event(..)
     , Commit(..)
+    , PushCommit(..)
     , Repository(..)
     , PullRequest(..)
     , Issue(..)
@@ -40,8 +41,8 @@ import           Data.Text        (Text)
 data Event
   = PushEvent
     { epuRef         :: Text
-    , epuCommits     :: [Commit]
-    , epuHead_commit :: Commit
+    , epuCommits     :: [PushCommit]
+    , epuHead_commit :: PushCommit
     , epuCompare     :: Text
     , epuRepository  :: Repository
     }
@@ -55,7 +56,8 @@ data Event
     { estSha         :: Text
     , estState       :: Text
     , estDescription :: Maybe Text
-    , estStatus_url  :: Maybe Text
+    , estCommit      :: Commit
+    , estTarget_url  :: Maybe Text
     , estRepository  :: Repository
     }
   | IssueCommentEvent
@@ -80,9 +82,20 @@ data Event
 instance FromJSON Event where
   parseJSON = genericParseJSON jsonParseOpts
 
+
+data PushCommit = PushCommit
+  { pcmId      :: Text
+  , pcmMessage :: Text
+  } deriving (Eq, Show, Generic)
+
+instance FromJSON PushCommit where
+  parseJSON = genericParseJSON jsonParseOpts
+
+
+{-# ANN type Commit ("HLint: ignore Use camelCase" :: Text) #-}
 data Commit = Commit
-  { cmtId      :: Text
-  , cmtMessage :: Text
+  { cmtSha      :: Text
+  , cmtHtml_url :: Text
   } deriving (Eq, Show, Generic)
 
 instance FromJSON Commit where
