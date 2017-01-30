@@ -72,7 +72,7 @@ eventHandler eventTypeHeader jsonEvent =
           liftIO . warningM $
             "Unable to parse GitHub event type \""
               <> show eventType <> "\": "
-              <> msg 
+              <> msg
           return NoContent
 
 dispatch :: Event -> App NoContent

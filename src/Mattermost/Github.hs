@@ -61,4 +61,4 @@ debugM :: String -> IO ()
 debugM = Log.debugM modName
 
 errorM :: String -> IO ()
-errorM = Log.debugM modName
+errorM = Log.errorM modName
