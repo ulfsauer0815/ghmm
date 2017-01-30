@@ -25,7 +25,7 @@ renderMessageText event
        <> link (quote (shortenCommitMessage $ cmtMessage headCommit)) compare
     PullRequestEvent action _ (PullRequest number htmlUrl state title) repository ->
       repoPrefix repository
-       <> link ("Pull Request #" <> (T.pack . show) number <> " - " <> state) htmlUrl
+       <> link ("PR #" <> (T.pack . show) number <> " - " <> state) htmlUrl
        <> " " <> italic action <> ": "
        <> title
     StatusEvent sha state description statusUrl repository ->
@@ -38,11 +38,11 @@ renderMessageText event
        <> ": " <> shortenCommentMessage commentBody
     PullRequestReviewEvent action (Review rvHtmlUrl rvBody rvState rvUser) (PullRequest number prHtmlUrl prState title) repository ->
       repoPrefix repository
-       <> link ("Pull Request #" <> (T.pack . show) number <> " Review " <> italic action <> " (" <> usrLogin rvUser <> ")") rvHtmlUrl
+       <> link ("PR #" <> (T.pack . show) number <> " Review " <> italic action <> " (" <> usrLogin rvUser <> ")") rvHtmlUrl
        <> ": " <> shortenCommentMessage rvBody
     PullRequestReviewCommentEvent action (Comment commentHtmlUrl commentBody commentUser) (PullRequest number htmlUrl state title) repository ->
        repoPrefix repository
-        <> link ("Pull Request #" <> (T.pack . show) number <> " Review Comment " <> italic action <> " (" <> usrLogin commentUser <> ")") commentHtmlUrl
+        <> link ("PR #" <> (T.pack . show) number <> " Review Comment " <> italic action <> " (" <> usrLogin commentUser <> ")") commentHtmlUrl
         <> ": " <> shortenCommentMessage commentBody
   where
     -- XXX: hardcoded master branch, use payload default branch data
