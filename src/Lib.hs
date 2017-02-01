@@ -26,6 +26,7 @@ import           Servant
 
 import           App
 import           Github.Api               as Github
+import           Github.Event.Filter
 import           Github.Event.Json
 import           Mattermost.Github
 
@@ -58,7 +59,7 @@ eventHandler :: Maybe Text -> Value -> App NoContent
 eventHandler eventTypeHeader jsonEvent =
   case eventTypeHeader of
     Nothing -> do
-      liftIO $ warningM "request without X-Github-Event header"
+      liftIO $ warningM "Request without X-Github-Event header"
       throwError $ err400 { errBody = "X-Github-Event header missing" }
     Just eventType -> do
       liftIO $ do
@@ -67,7 +68,7 @@ eventHandler eventTypeHeader jsonEvent =
       case decodeEvent eventType jsonEvent of
         Right e  -> do
           liftIO . debugM $ "Parsed GitHub event: " <> show e
-          dispatch e
+          handleEvent e
         Left msg -> do
           liftIO . warningM $
             "Unable to parse GitHub event type \""
@@ -75,10 +76,14 @@ eventHandler eventTypeHeader jsonEvent =
               <> msg
           return NoContent
 
-dispatch :: Event -> App NoContent
-dispatch e = do
-  postEvent e
-  return NoContent
+
+handleEvent :: Event -> App NoContent
+handleEvent e =
+  if isInterestingEvent e
+  then postEvent e
+  else do
+    liftIO $ debugM "Discarding boring event"
+    return NoContent
 
 -- ----------------------------------------------
 

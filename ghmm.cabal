@@ -26,6 +26,7 @@ library
   exposed-modules:     Lib
                      , App
                      , Github.Api
+                     , Github.Event.Filter
                      , Github.Event.Message
                      , Github.Event.Types
                      , Github.Event.Json
