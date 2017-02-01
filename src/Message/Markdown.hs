@@ -30,5 +30,5 @@ italic :: (Monoid m, IsString m) => m -> m
 italic text = "*" <> text <> "*"
 
 -- | Text in bold
-bold :: (Monoid c, IsString c) => t -> c -> c
-bold text = italic . italic
+bold :: (Monoid c, IsString c) => c -> c
+bold = italic . italic
