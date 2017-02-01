@@ -52,7 +52,11 @@ library
                      , hslogger
                      , mtl
   default-language:    Haskell2010
-  ghc-options:         -fwarn-unused-imports -fwarn-incomplete-patterns
+  ghc-options:         -fwarn-unused-imports
+                       -fwarn-incomplete-patterns
+                       -Wunused-matches
+                       -Wmissing-signatures
+                       -Wname-shadowing
 
 executable ghmm-exe
   hs-source-dirs:      app

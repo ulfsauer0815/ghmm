@@ -16,12 +16,12 @@ import           Message.Markdown
 renderMessageText :: EventPayload -> Text
 renderMessageText event
   = case event of
-    PushEvent ref commits headCommit compare repository ->
+    PushEvent ref commits headCommit compareUrl repository ->
       repoPrefix repository
        <> "Push ("
        <> optBranch ref
        <> (T.pack . show . length $ commits) <> "): "
-       <> link (quote (firstLine $ pcmMessage headCommit)) compare
+       <> link (quote (firstLine $ pcmMessage headCommit)) compareUrl
     PullRequestEvent action _ (PullRequest number htmlUrl state title) repository ->
       repoPrefix repository
        <> link ("PR #" <> (T.pack . show) number <> " - " <> state) htmlUrl
@@ -32,15 +32,15 @@ renderMessageText event
       in  repoPrefix repository
            <> link ("Status (" <> shaify sha <> ")") htmlUrl <> ": " <> italic state
            <> ifPresent description (": "  <>)
-    IssueCommentEvent action (Issue state issueHtmlUrl issueUser) (Comment commentHtmlUrl commentBody commentUser) repository ->
+    IssueCommentEvent action (Issue _state _ _) (Comment commentHtmlUrl commentBody commentUser) repository ->
       repoPrefix repository
        <> link ("Comment " <> italic action <> " (" <> usrLogin commentUser <> ")") commentHtmlUrl
        <> ": " <> firstLine commentBody
-    PullRequestReviewEvent action (Review rvHtmlUrl rvBody rvState rvUser) (PullRequest number prHtmlUrl prState title) repository ->
+    PullRequestReviewEvent action (Review rvHtmlUrl rvBody _state rvUser) (PullRequest number _ _prState _title) repository ->
       repoPrefix repository
        <> link ("PR #" <> (T.pack . show) number <> " Review " <> italic action <> " (" <> usrLogin rvUser <> ")") rvHtmlUrl
        <> ": " <> firstLine rvBody
-    PullRequestReviewCommentEvent action (Comment commentHtmlUrl commentBody commentUser) (PullRequest number htmlUrl state title) repository ->
+    PullRequestReviewCommentEvent action (Comment commentHtmlUrl commentBody commentUser) (PullRequest number _ _state _title) repository ->
        repoPrefix repository
         <> link ("PR #" <> (T.pack . show) number <> " Review Comment " <> italic action <> " (" <> usrLogin commentUser <> ")") commentHtmlUrl
         <> ": " <> firstLine commentBody

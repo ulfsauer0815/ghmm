@@ -70,13 +70,13 @@ hmacAuth cfg app req resp = do
     case lookup "x-hub-signature" $ requestHeaders req of
       Nothing -> return $ Left MissingHeader
       Just headerVal -> -- XXX: eww
-        if hash == "sha1" && BS.length sigWithEqSign == 40+1
-        then checkSignature sig
+        if cipher == "sha1" && BS.length sigWithEqSign == 40+1
+        then checkSignature signature
         else return $ Left MalformedSignature
 
         where
-        (hash, sigWithEqSign) = BS.span (_equal /=) headerVal
-        sig = BS.tail sigWithEqSign
+        (cipher, sigWithEqSign) = BS.span (_equal /=) headerVal
+        signature = BS.tail sigWithEqSign
         checkSignature sig = do
           (req', reqSig) <- calculateSignature cfg req
           if reqSig == sig
@@ -103,23 +103,25 @@ calculateSignature cfg req = do
   let bodyStrict = SL8.toStrict . SL8.fromChunks $ body
   let HMAC hashed = hmac (authSecret cfg) bodyStrict :: HMAC hash
   return (req', toHexByteString hashed) -- digestToHexByteString hashed with cryptohash (2 less deps...)
-  where
-  -- taken from: wai-extra/src/Network/Wai/Middleware/RequestLogger.hs
-  getRequestBody :: Request -> IO (Request, [BS8.ByteString])
-  getRequestBody req = do
-    let loop front = do
-           bs <- requestBody req
-           if BS8.null bs
-               then return $ front []
-               else loop $ front . (bs:)
-    body <- loop id
-    ichunks <- newIORef body
-    let rbody = atomicModifyIORef ichunks $ \chunks ->
-           case chunks of
-               [] -> ([], BS8.empty)
-               x:y -> (y, x)
-    let req' = req { requestBody = rbody }
-    return (req', body)
 
-  toHexByteString :: ByteArrayAccess a => a -> ByteString
-  toHexByteString = BSB16.encode . BA.convert
+
+-- taken from: wai-extra/src/Network/Wai/Middleware/RequestLogger.hs
+getRequestBody :: Request -> IO (Request, [BS8.ByteString])
+getRequestBody req = do
+  let loop front = do
+         bs <- requestBody req
+         if BS8.null bs
+             then return $ front []
+             else loop $ front . (bs:)
+  body <- loop id
+  ichunks <- newIORef body
+  let rbody = atomicModifyIORef ichunks $ \chunks ->
+         case chunks of
+             [] -> ([], BS8.empty)
+             x:y -> (y, x)
+  let req' = req { requestBody = rbody }
+  return (req', body)
+
+
+toHexByteString :: ByteArrayAccess a => a -> ByteString
+toHexByteString = BSB16.encode . BA.convert

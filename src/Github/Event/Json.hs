@@ -7,6 +7,7 @@ module Github.Event.Json
     ) where
 
 import           Data.Aeson
+import           Data.Aeson.Types
 import           Data.Map
 import qualified Data.Map           as M
 import           Data.Text          (Text)
@@ -34,6 +35,8 @@ decodeEvent eventType v =
     Just constructor -> parseJSON' constructor v
     Nothing          -> fail "unknown event type"
 
+injectConstructor :: Text -> Value -> Value
+injectConstructor h o = object [h .= o]
 
-injectHeader :: Text -> Value -> Value
-injectHeader h o = object [h .= o]
+parseJSON' :: FromJSON a => Text -> Value -> Either String a
+parseJSON' c = parseEither $ parseJSON . injectConstructor c

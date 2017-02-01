@@ -59,8 +59,8 @@ initLoggers prio = do
   updateGlobalLogger rootLoggerName clearLevel
 
   -- stdout root logger
-  formatter <- getSimpleLogFormatter stdout
-  handlerBare <- streamHandler stdout prio `withFormatter` formatter logFormat
+  logFormatter <- getSimpleLogFormatter stdout
+  handlerBare <- streamHandler stdout prio `withFormatter` logFormatter logFormat
   updateGlobalLogger rootLoggerName (setHandlers [handlerBare])
 
 

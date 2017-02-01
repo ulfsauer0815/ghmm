@@ -19,7 +19,7 @@ import           Data.Monoid
 
 -- | A simple log formatter which colors the output on priority basis.
 simpleColorLogFormatter :: String -> a -> LogRecord -> String -> IO String
-simpleColorLogFormatter format a r@(prio, msg) =
+simpleColorLogFormatter format a r@(prio, _) =
   (simpleLogFormatter $
         setSGRCode ansiFormat
      <> format
@@ -46,8 +46,8 @@ withFormatter h f = fmap (`setFormatter` f) h
 --   the TERM environment variable doesn't say dumb (which is what Emacs sets
 --   for its own terminal).
 getSimpleLogFormatter :: Handle -> IO (String -> a -> LogRecord -> String -> IO String)
-getSimpleLogFormatter handle = do
-  ansiSupported <- hSupportsANSI handle
+getSimpleLogFormatter h = do
+  ansiSupported <- hSupportsANSI h
   if ansiSupported
   then return simpleColorLogFormatter
   else return simpleLogFormatter

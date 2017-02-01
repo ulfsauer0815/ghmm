@@ -38,5 +38,5 @@ data Configuration = Configuration
 
  -- ----------------------------------------------
 
-config :: MonadReader AppContext m => (Configuration -> a) -> m a
-config f = asks (f . ctxConfiguration)
+cfg :: MonadReader AppContext m => (Configuration -> a) -> m a
+cfg f = asks (f . ctxConfiguration)

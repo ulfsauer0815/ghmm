@@ -15,8 +15,6 @@ module Github.Event.Types
     , User(..)
     , Review(..)
 
-    , parseJSON'
-
     , isPushEvent
     , isPullRequestEvent
     , isStatusEvent
@@ -176,6 +174,7 @@ instance FromJSON Review where
 
 
 -- TODO: smarter way to detect prefix (for camel and snake case)
+jsonParseOpts :: Options
 jsonParseOpts = defaultOptions
   { fieldLabelModifier = labelModifier
   ,sumEncoding = ObjectWithSingleField
@@ -184,28 +183,28 @@ jsonParseOpts = defaultOptions
   labelModifier name = let (x:xs) = drop 3 name in switchCase x : xs -- XXX: don't forget the prefix or BOOM
   switchCase a = if isUpper a then toLower a else toUpper a
 
-injectConstructor :: Text -> Value -> Value
-injectConstructor h o = object [h .= o]
-
-parseJSON' :: FromJSON a => Text -> Value -> Either String a
-parseJSON' c = parseEither $ parseJSON . injectConstructor c
-
 -- ----------------------------------------------
 
+isPushEvent :: EventPayload -> Bool
 isPushEvent PushEvent{} = True
 isPushEvent _           = False
 
+isPullRequestEvent :: EventPayload -> Bool
 isPullRequestEvent PullRequestEvent{} = True
 isPullRequestEvent _                  = False
 
+isStatusEvent :: EventPayload -> Bool
 isStatusEvent StatusEvent{} = True
 isStatusEvent _             = False
 
+isIssueCommentEvent :: EventPayload -> Bool
 isIssueCommentEvent IssueCommentEvent{} = True
 isIssueCommentEvent _                   = False
 
+isPullRequestReviewEvent :: EventPayload -> Bool
 isPullRequestReviewEvent PullRequestReviewEvent{} = True
 isPullRequestReviewEvent _                        = False
 
+isPullRequestReviewCommentEvent :: EventPayload -> Bool
 isPullRequestReviewCommentEvent PullRequestReviewCommentEvent{} = True
 isPullRequestReviewCommentEvent _                               = False

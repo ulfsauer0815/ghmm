@@ -30,9 +30,9 @@ import           Mattermost.Api
 
 postEvent :: Event -> App NoContent
 postEvent e = do
-  mmUrl             <- config cfgMattermostUrl
-  mmPort            <- config cfgMattermostPort
-  mmApiKey          <- config cfgMattermostApiKey
+  mmUrl             <- cfg cfgMattermostUrl
+  mmPort            <- cfg cfgMattermostPort
+  mmApiKey          <- cfg cfgMattermostApiKey
   httpClientManager <- asks ctxHttpClientManager
   res <- liftIO $ do
     debugM $ "Posting message to mattermost: " <> T.unpack messageText

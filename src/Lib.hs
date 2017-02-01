@@ -50,8 +50,8 @@ app :: AppContext -> Application
 app ctx = serve (Proxy :: Proxy Github.Api) (appToServer ctx)
 
 api :: Proxy Github.Api
-
 api = Proxy
+
 -- ----------------------------------------------
 
 -- TODO: don't block
@@ -68,22 +68,22 @@ eventHandler deliveryHeader eventHeader jsonEvent =
           throwError $ err400 { errBody = "X-Github-Event header missing" }
         Just eventType ->
           eventHandler' deliveryId eventType jsonEvent
-  where
-  eventHandler' :: Text -> Text -> Value -> App NoContent
-  eventHandler' deliveryId eventType jsonEvent = do
-    liftIO $ do
-      debugM $ "Handling GitHub event type: " <> show eventType
-      debugM $ "Handling GitHub event: " <> show jsonEvent
-    case decodeEvent eventType jsonEvent of
-      Right e  -> do
-        liftIO . debugM $ "Parsed GitHub event: " <> show e
-        handleEvent $ Event e eventType deliveryId
-      Left msg -> do
-        liftIO . warningM $
-          "Unable to parse GitHub event type \""
-            <> show eventType <> "\": "
-            <> msg
-        return NoContent
+
+eventHandler' :: Text -> Text -> Value -> App NoContent
+eventHandler' deliveryId eventType jsonEvent = do
+  liftIO $ do
+    debugM $ "Handling GitHub event type: " <> show eventType
+    debugM $ "Handling GitHub event: " <> show jsonEvent
+  case decodeEvent eventType jsonEvent of
+    Right e  -> do
+      liftIO . debugM $ "Parsed GitHub event: " <> show e
+      handleEvent $ Event e eventType deliveryId
+    Left msg -> do
+      liftIO . warningM $
+        "Unable to parse GitHub event type \""
+          <> show eventType <> "\": "
+          <> msg
+      return NoContent
 
 
 handleEvent :: Event -> App NoContent
