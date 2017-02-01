@@ -33,10 +33,6 @@ import           Data.Text        (Text)
 
 -- ----------------------------------------------
 
--- TODO: maybe use separate data types instead of sum type
---       which would make it easier to derive json instances and get rid of
---       parseXEvent functions etc.
-
 {-# ANN type Event ("HLint: ignore Use camelCase" :: Text) #-}
 data Event
   = PushEvent
