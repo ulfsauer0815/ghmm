@@ -5,7 +5,6 @@ module Github.Event.Message
     ) where
 
 import           Data.Monoid
-import           Data.Maybe
 import           Data.Text        (Text)
 import qualified Data.Text        as T
 
@@ -29,7 +28,7 @@ renderMessageText event
        <> " " <> italic action <> ": "
        <> title
     StatusEvent _ state description (Commit sha commitUrl) targetUrl repository ->
-      let htmlUrl = fromMaybe commitUrl targetUrl
+      let htmlUrl = fromEmpty commitUrl targetUrl
       in  repoPrefix repository
            <> link ("Status (" <> shaify sha <> ")") htmlUrl <> ": " <> italic state
            <> ifPresent description (": "  <>)
@@ -54,3 +53,6 @@ renderMessageText event
   ifPresent e f = maybe mempty f e
   modifyIfPresent t eMb f = maybe t (f t) eMb
   shaify t = "#" <> T.take 7 t
+  fromEmpty x (Just "") = x
+  fromEmpty _ (Just y)  = y
+  fromEmpty x Nothing   = x
