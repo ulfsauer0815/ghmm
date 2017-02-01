@@ -3,8 +3,7 @@
 module Main where
 
 import           System.IO
-import           System.Log.Formatter
-import           System.Log.Handler
+import           System.Log
 import           System.Log.Handler.Simple
 import           System.Log.Logger                    hiding (debugM, errorM,
                                                        warningM)
@@ -20,6 +19,7 @@ import           App
 import           Configuration
 import           HmacMiddleware
 import           Lib
+import           LogFormatter
 
 -- ----------------------------------------------
 
@@ -55,16 +55,17 @@ readConfig =
 
 initLoggers :: Priority -> IO ()
 initLoggers prio = do
-  let defFormatter = simpleLogFormatter "[$time : $loggername : $prio] $msg"
   -- root does not have a priority
   updateGlobalLogger rootLoggerName clearLevel
+
   -- stdout root logger
-  handlerBare <- streamHandler stdout prio `withFormatter` defFormatter
+  formatter <- getSimpleLogFormatter stdout
+  handlerBare <- streamHandler stdout prio `withFormatter` formatter logFormat
   updateGlobalLogger rootLoggerName (setHandlers [handlerBare])
 
 
-withFormatter :: (Monad m, LogHandler r) => m r -> LogFormatter r -> m r
-withFormatter h f = fmap (`setFormatter` f) h
+logFormat :: String
+logFormat = "[$time : $loggername : $prio] $msg"
 
 -- ----------------------------------------------
 
