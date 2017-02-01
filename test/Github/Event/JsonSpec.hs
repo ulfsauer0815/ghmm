@@ -54,13 +54,13 @@ spec =
 
 -- ----------------------------------------------
 
-loadAndCheckEvent :: String -> Text -> IO Event
+loadAndCheckEvent :: String -> Text -> IO EventPayload
 loadAndCheckEvent file header = do
   json <- loadFile file
   let valueMb = decode json :: Maybe Value
   valueMb `shouldSatisfy` isJust
   let value = fromJust valueMb
-  let eventEt = decodeEvent header value :: Either String Event
+  let eventEt = decodeEvent header value :: Either String EventPayload
   eventEt `shouldSatisfy` isRight
   return $ fromRight eventEt
 

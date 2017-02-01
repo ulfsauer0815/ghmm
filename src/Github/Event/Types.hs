@@ -5,6 +5,7 @@
 
 module Github.Event.Types
     ( Event(..)
+    , EventPayload(..)
     , Commit(..)
     , PushCommit(..)
     , Repository(..)
@@ -33,8 +34,15 @@ import           Data.Text        (Text)
 
 -- ----------------------------------------------
 
-{-# ANN type Event ("HLint: ignore Use camelCase" :: Text) #-}
-data Event
+data Event = Event
+  { evtPayload :: EventPayload
+  , evtType    :: Text
+  , evtId      :: Text
+  }
+
+
+{-# ANN type EventPayload ("HLint: ignore Use camelCase" :: Text) #-}
+data EventPayload
   = PushEvent
     { epuRef         :: Text
     , epuCommits     :: [PushCommit]
@@ -75,7 +83,7 @@ data Event
     , ercRepository   :: Repository
     } deriving (Eq, Show, Generic)
 
-instance FromJSON Event where
+instance FromJSON EventPayload where
   parseJSON = genericParseJSON jsonParseOpts
 
 

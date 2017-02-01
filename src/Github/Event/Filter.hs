@@ -11,13 +11,14 @@ import           Github.Api
 
 isInterestingEvent :: Event -> Bool
 isInterestingEvent e
-  =  isInterestingPR e
-  && isInterestingComment e
-  && isInterestingReviewComment e
-  && isInterestingStatus e
+  =  isInterestingPR p
+  && isInterestingComment p
+  && isInterestingReviewComment p
+  && isInterestingStatus p
+  where p = evtPayload e
 
 
-isInterestingPR :: Event -> Bool
+isInterestingPR :: EventPayload -> Bool
 isInterestingPR PullRequestEvent{..}
   =  eprAction == "opened"
   || eprAction == "synchronize"
@@ -26,19 +27,19 @@ isInterestingPR PullRequestEvent{..}
 isInterestingPR _ = False
 
 
-isInterestingComment :: Event -> Bool
+isInterestingComment :: EventPayload -> Bool
 isInterestingComment IssueCommentEvent{..}
   =  ecoAction == "created"
 isInterestingComment _ = False
 
 
-isInterestingReviewComment :: Event -> Bool
+isInterestingReviewComment :: EventPayload -> Bool
 isInterestingReviewComment PullRequestReviewCommentEvent{..}
   =  ercAction == "created"
 isInterestingReviewComment _ = False
 
 
-isInterestingStatus :: Event -> Bool
+isInterestingStatus :: EventPayload -> Bool
 isInterestingStatus StatusEvent{..}
   =  estState /= "pending"
 isInterestingStatus _ = False

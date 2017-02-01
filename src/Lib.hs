@@ -55,26 +55,35 @@ api = Proxy
 -- ----------------------------------------------
 
 -- TODO: don't block
-eventHandler :: Maybe Text -> Value -> App NoContent
-eventHandler eventTypeHeader jsonEvent =
-  case eventTypeHeader of
+eventHandler :: Maybe Text -> Maybe Text-> Value -> App NoContent
+eventHandler deliveryHeader eventHeader jsonEvent =
+  case deliveryHeader of
     Nothing -> do
-      liftIO $ warningM "Request without X-Github-Event header"
-      throwError $ err400 { errBody = "X-Github-Event header missing" }
-    Just eventType -> do
-      liftIO $ do
-        debugM $ "Handling GitHub event type: " <> show eventType
-        debugM $ "Handling GitHub event: " <> show jsonEvent
-      case decodeEvent eventType jsonEvent of
-        Right e  -> do
-          liftIO . debugM $ "Parsed GitHub event: " <> show e
-          handleEvent e
-        Left msg -> do
-          liftIO . warningM $
-            "Unable to parse GitHub event type \""
-              <> show eventType <> "\": "
-              <> msg
-          return NoContent
+      liftIO $ warningM "Request without X-GitHub-Delivery header"
+      throwError $ err400 { errBody = "X-GitHub-Delivery header missing" }
+    Just deliveryId ->
+      case eventHeader of
+        Nothing -> do
+          liftIO $ warningM "Request without X-Github-Event header"
+          throwError $ err400 { errBody = "X-Github-Event header missing" }
+        Just eventType ->
+          eventHandler' deliveryId eventType jsonEvent
+  where
+  eventHandler' :: Text -> Text -> Value -> App NoContent
+  eventHandler' deliveryId eventType jsonEvent = do
+    liftIO $ do
+      debugM $ "Handling GitHub event type: " <> show eventType
+      debugM $ "Handling GitHub event: " <> show jsonEvent
+    case decodeEvent eventType jsonEvent of
+      Right e  -> do
+        liftIO . debugM $ "Parsed GitHub event: " <> show e
+        handleEvent $ Event e eventType deliveryId
+      Left msg -> do
+        liftIO . warningM $
+          "Unable to parse GitHub event type \""
+            <> show eventType <> "\": "
+            <> msg
+        return NoContent
 
 
 handleEvent :: Event -> App NoContent

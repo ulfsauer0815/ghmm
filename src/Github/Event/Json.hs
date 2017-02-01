@@ -28,7 +28,7 @@ headerToConstructor = flip M.lookup mapping
     ]
 
 
-decodeEvent :: Text -> Value -> Either String Event
+decodeEvent :: Text -> Value -> Either String EventPayload
 decodeEvent eventType v =
   case headerToConstructor eventType of
     Just constructor -> parseJSON' constructor v

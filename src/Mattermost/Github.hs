@@ -45,7 +45,7 @@ postEvent e = do
   return NoContent
 
   where
-  messageText = renderMessageText e
+  messageText = renderMessageText . evtPayload $ e
   payload = MessagePayload
     { text = messageText
     , username = Just "GitHub"

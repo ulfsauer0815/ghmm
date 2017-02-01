@@ -6,6 +6,7 @@ module Github.Api
     ( Api
 
     , Event(..)
+    , EventPayload(..)
     , Commit(..)
     , PushCommit(..)
     , Repository(..)
@@ -26,6 +27,7 @@ import           Github.Event.Types
 -- ----------------------------------------------
 
 type Api =
-     Header "X-GitHub-Event" Text
+     Header "X-GitHub-Delivery" Text
+  :> Header "X-GitHub-Event" Text
   :> ReqBody '[JSON] Value
   :> PostNoContent '[JSON] NoContent

@@ -13,7 +13,7 @@ import           Message.Markdown
 
 -- ----------------------------------------------
 
-renderMessageText :: Event -> Text
+renderMessageText :: EventPayload -> Text
 renderMessageText event
   = case event of
     PushEvent ref commits headCommit compare repository ->
