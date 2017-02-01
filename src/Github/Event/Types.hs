@@ -117,7 +117,7 @@ instance FromJSON Repository where
 
 
 data Pusher = Pusher
-  { email :: Text
+  { pshEmail :: Text
   } deriving (Eq, Show, Generic)
 
 instance ToJSON Pusher
