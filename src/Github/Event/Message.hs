@@ -23,27 +23,30 @@ renderMessageText event
        <> (T.pack . show . length $ commits) <> "): "
        <> link (quote (firstLine $ pcmMessage headCommit)) compareUrl
     PullRequestEvent action _ (PullRequest number htmlUrl state title) repository ->
-      repoPrefix repository
-       <> link ("PR #" <> (T.pack . show) number <> " - " <> state) htmlUrl
-       <> " " <> italic action <> ": "
-       <> title
+      let optAction = if action == "synchronize" then "sync" else action
+      in repoPrefix repository
+           <> link ("PR #" <> (T.pack . show) number <> " - " <> state) htmlUrl
+           <> (ml . italic) optAction
+           <> tl ": " title
     StatusEvent _ state description (Commit sha commitUrl) targetUrl repository ->
       let htmlUrl = fromEmpty commitUrl targetUrl
       in  repoPrefix repository
            <> link ("Status (" <> shaify sha <> ")") htmlUrl <> ": " <> italic state
            <> ifPresent description (": "  <>)
     IssueCommentEvent action (Issue _state _ _) (Comment commentHtmlUrl commentBody commentUser) repository ->
-      repoPrefix repository
-       <> link ("Comment " <> italic action <> " (" <> usrLogin commentUser <> ")") commentHtmlUrl
-       <> ": " <> firstLine commentBody
+      let optAction = if action == "created" then "" else action
+      in  repoPrefix repository
+           <> link ("Comment" <> (ml . italic) optAction <> ml "(" <> usrLogin commentUser <> ")") commentHtmlUrl
+           <> ": " <> firstLine commentBody
     PullRequestReviewEvent action (Review rvHtmlUrl rvBody _state rvUser) (PullRequest number _ _prState _title) repository ->
       repoPrefix repository
        <> link ("PR #" <> (T.pack . show) number <> " Review " <> italic action <> " (" <> usrLogin rvUser <> ")") rvHtmlUrl
        <> ": " <> firstLine rvBody
     PullRequestReviewCommentEvent action (Comment commentHtmlUrl commentBody commentUser) (PullRequest number _ _state _title) repository ->
-       repoPrefix repository
-        <> link ("PR #" <> (T.pack . show) number <> " Review Comment " <> italic action <> " (" <> usrLogin commentUser <> ")") commentHtmlUrl
-        <> ": " <> firstLine commentBody
+      let optAction = if action == "created" then "" else italic action
+      in  repoPrefix repository
+            <> link ("PR #" <> (T.pack . show) number <> ml "Review Comment" <> (ml . italic) optAction <> ml "(" <> usrLogin commentUser <> ")") commentHtmlUrl
+            <> ":" <> (ml . firstLine) commentBody
   where
     -- XXX: hardcoded master branch, use payload default branch data
   optBranch ref = if ref /= "refs/heads/master" then "on " <> lastSegment ref <> ", " else ""
