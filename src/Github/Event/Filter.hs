@@ -12,9 +12,9 @@ import           Github.Api
 isInterestingEvent :: Event -> Bool
 isInterestingEvent e
   =  isInterestingPR p
-  && isInterestingComment p
-  && isInterestingReviewComment p
-  && isInterestingStatus p
+  || isInterestingComment p
+  || isInterestingReviewComment p
+  || isInterestingStatus p
   where p = evtPayload e
 
 
