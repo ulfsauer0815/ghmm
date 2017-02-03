@@ -22,10 +22,10 @@ renderMessageText event
        <> optBranch ref
        <> (T.pack . show . length $ commits) <> "): "
        <> link (quote (firstLine $ pcmMessage headCommit)) compareUrl
-    PullRequestEvent action _ (PullRequest number htmlUrl state title) repository ->
+    PullRequestEvent action _ (PullRequest number htmlUrl _state title) repository ->
       let optAction = if action == "synchronize" then "sync" else action
       in repoPrefix repository
-           <> link ("PR #" <> (T.pack . show) number <> " - " <> state) htmlUrl
+           <> link ("PR #" <> (T.pack . show) number) htmlUrl
            <> (ml . italic) optAction
            <> tl ": " title
     StatusEvent _ state description (Commit sha commitUrl) targetUrl repository ->
