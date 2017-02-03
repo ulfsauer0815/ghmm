@@ -15,6 +15,10 @@ build:
 run:
 	. ./cfg/dev && stack exec ghmm-exe | tee -a server.log
 
+.PHONY: test
+test:
+	. ./cfg/dev && stack test
+
 
 $(PING_URL_FILE):
 	. ./cfg/dev && \
