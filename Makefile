@@ -11,9 +11,9 @@ REPOS_FILE=$(CONFIGDIR)/REPOS
 build:
 	stack build
 
-.PHONY: run-dev
+.PHONY: run
 run:
-	. ./cfg/dev && stack exec ghmm-exe
+	. ./cfg/dev && stack exec ghmm-exe | tee -a server.log
 
 
 $(PING_URL_FILE):
