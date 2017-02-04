@@ -52,6 +52,10 @@ spec = do
     it "decodes \"status\" event" $ do
       event <- loadAndCheckEvent "status.json" "status"
       event `shouldSatisfy` isStatusEvent
+
+    it "decodes \"status\" event with description" $ do
+      event <- loadAndCheckEvent "status_with_description.json" "status"
+      event `shouldSatisfy` isStatusEvent
       logMessage event
 
     it "decodes \"issue_comment\" event" $ do
