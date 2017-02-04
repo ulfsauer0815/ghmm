@@ -106,8 +106,9 @@ instance FromJSON Commit where
 
 {-# ANN type Repository ("HLint: ignore Use camelCase" :: Text) #-}
 data Repository = Repository
-  { repName     :: Text
-  , repHtml_url :: Text
+  { repName           :: Text
+  , repDefault_branch :: Text
+  , repHtml_url       :: Text
   } deriving (Eq, Show, Generic)
 
 instance FromJSON Repository where
