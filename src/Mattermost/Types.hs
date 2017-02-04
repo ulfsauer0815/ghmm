@@ -20,6 +20,7 @@ data MessagePayload = MessagePayload
  { text     :: Text
  , username :: Maybe Text
  , icon_url :: Maybe Text
+ , channel  :: Maybe Text
  } deriving (Eq, Show, Generic)
 
 instance ToJSON MessagePayload

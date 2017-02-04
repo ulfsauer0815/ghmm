@@ -50,6 +50,7 @@ postEvent e = do
     { text = messageText
     , username = Just "GitHub"
     , icon_url = Just "http://i.imgur.com/NQA4pPs.png"
+    , channel  = Nothing
     }
 
 -- ----------------------------------------------

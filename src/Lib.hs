@@ -5,7 +5,6 @@
 module Lib
     ( startApp
     , app
-    , Configuration(..)
     ) where
 
 import           Control.Monad.Except     (ExceptT)

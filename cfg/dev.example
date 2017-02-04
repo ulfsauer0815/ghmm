@@ -13,3 +13,4 @@ export WEBHOOK_PROTOCOL="https"
 export WEBHOOK_URL=$WEBHOOK_PROTOCOL://$WEBHOOK_HOST
 
 export AUTH="--auth GitHubUsername:abcdefghijklmnopqrstuvwxyz01234567891234"
+export TEST_MATTERMOST_CHANNEL="test"

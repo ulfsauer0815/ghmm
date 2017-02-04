@@ -19,6 +19,10 @@ run:
 test:
 	. ./cfg/dev && stack test
 
+.PHONY: test-live
+test-live:
+	. ./cfg/dev && stack exec ghmm-test-exe
+
 .PHONY: test-json
 test-json:
 	. ./cfg/dev && rm -f "$$TEST_LOG" && stack test && cat "$$TEST_LOG" | xclip -selection c
