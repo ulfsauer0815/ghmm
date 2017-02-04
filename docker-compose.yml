@@ -10,3 +10,12 @@ app:
   command: /usr/local/bin/ghmm-exe
   ports:
     - "8000:8000"
+
+test-messages:
+  image: ulfs/ghmm
+  environment:
+    - MATTERMOST_URL
+    - MATTERMOST_PORT
+    - MATTERMOST_API_KEY
+    - TEST_MATTERMOST_CHANNEL
+  command: /usr/local/bin/ghmm-test-exe

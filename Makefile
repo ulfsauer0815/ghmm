@@ -16,15 +16,15 @@ run:
 	. ./cfg/dev && stack exec ghmm-exe | tee -a server.log
 
 .PHONY: test
-test:
+test: build
 	. ./cfg/dev && stack test
 
 .PHONY: test-live
-test-live:
+test-live: build
 	. ./cfg/dev && stack exec ghmm-test-exe
 
 .PHONY: test-json
-test-json:
+test-json: build
 	. ./cfg/dev && rm -f "$$TEST_LOG" && stack test && cat "$$TEST_LOG" | xclip -selection c
 
 $(PING_URL_FILE):

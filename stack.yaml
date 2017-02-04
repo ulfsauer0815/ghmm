@@ -8,3 +8,5 @@ image:
   container:
     name: ulfs/ghmm
     base: fpco/stack-run
+    add:
+      test/data/event: /test/data/event

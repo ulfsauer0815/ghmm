@@ -94,6 +94,7 @@ executable ghmm-test-exe
                      , text
                      , bytestring
                      , transformers
+                     , aeson
                      , servant-client
                      , http-client
                      , http-client-tls
