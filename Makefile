@@ -19,6 +19,9 @@ run:
 test:
 	. ./cfg/dev && stack test
 
+.PHONY: test-json
+test-json:
+	. ./cfg/dev && rm -f "$$TEST_LOG" && stack test && cat "$$TEST_LOG" | xclip -selection c
 
 $(PING_URL_FILE):
 	. ./cfg/dev && \
