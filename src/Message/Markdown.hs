@@ -15,7 +15,9 @@ module Message.Markdown
     , blockquote
     , link
     , h1, h2, h3, h4, h5
+    , itemize
 
+    , uln
     , cmb
     ) where
 
@@ -50,6 +52,9 @@ bold = italic . italic
 -- | Block quotes
 blockquote :: Stringish m => m -> m
 blockquote = tl "> "
+
+itemize :: Stringish m => [m] -> [m]
+itemize = map (tl "- ")
 
 -- | Margin left
 ml :: Stringish m => m -> m
@@ -96,3 +101,14 @@ nl = "\n"
 
 cmb :: (Stringish s) => Maybe s -> s
 cmb = fromMaybe mempty
+
+uln :: (Stringish s) => [s] -> s
+uln = intercalate (\x y-> x <> "\n" <> y)
+
+
+intercalate :: Monoid s => (s -> s -> s) -> [s] -> s
+intercalate f = ic
+  where
+  ic []     = mempty
+  ic [s]    = s
+  ic (s:ss) = s `f` ic ss

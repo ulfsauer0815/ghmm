@@ -22,7 +22,7 @@ import           Configuration
 import           Github.Event.Json
 import           Github.Event.Types
 import           Mattermost.Api
-import           Mattermost.Message
+import           Mattermost.Github.Message
 
 -- ----------------------------------------------
 
@@ -51,11 +51,11 @@ main = do
 sendEvent :: Manager -> Configuration -> EventPayload -> IO ()
 sendEvent clientManager Configuration{..} event = do
   result <- runExceptT $ hook cfgMattermostApiKey
-    (renderMessage messageTemplate event)
+    (renderMessage' testMessageTemplate event)
     clientManager (BaseUrl Https (T.unpack cfgMattermostUrl) cfgMattermostPort "")
   when (isLeft result) $ print result
   where
-  messageTemplate = MessagePayload
+  testMessageTemplate = MessagePayload
     { mptText        = Nothing
     , mptUsername    = Just "GitHub Test"
     , mptIcon_url    = Just "http://i.imgur.com/fzz0wsH.jpg"

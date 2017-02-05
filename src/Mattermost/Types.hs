@@ -7,6 +7,8 @@ module Mattermost.Types
     ( MessagePayload(..)
     , Attachment(..)
     , Field(..)
+
+    , attachment
     ) where
 
 import           GHC.Generics
@@ -34,6 +36,8 @@ instance ToJSON MessagePayload where
 
 
 {-# ANN type Attachment ("HLint: ignore Use camelCase" :: Text) #-}
+
+-- |  See <https://docs.mattermost.com/developer/message-attachments.html message attachment documentation>.
 data Attachment = Attachment
   { attFallback    :: Maybe Text
   , attColor       :: Maybe Text
@@ -59,3 +63,18 @@ data Field = Field
 
 instance ToJSON Field where
   toEncoding = genericToEncoding Json.parseOptions
+
+-- ----------------------------------------------
+
+attachment :: Attachment
+attachment = Attachment
+  { attFallback    = Nothing
+  , attColor       = Nothing
+  , attPretext     = Nothing
+  , attText        = Nothing
+  , attAuthor_name = Nothing
+  , attAuthor_link = Nothing
+  , attTitle       = Nothing
+  , attTitle_link  = Nothing
+  , attFields      = []
+  }

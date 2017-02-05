@@ -30,9 +30,9 @@ library
                      , Github.Event.Types
                      , Github.Event.Json
                      , Mattermost.Api
-                     , Mattermost.Message
                      , Mattermost.Types
-                     , Mattermost.Github
+                     , Mattermost.Github.Client
+                     , Mattermost.Github.Message
                      , Message.Markdown
                      , Message.Util
                      , Util

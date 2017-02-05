@@ -27,7 +27,7 @@ import           App
 import           Github.Api               as Github
 import           Github.Event.Filter
 import           Github.Event.Json
-import           Mattermost.Github
+import           Mattermost.Github.Client
 
 -- ----------------------------------------------
 

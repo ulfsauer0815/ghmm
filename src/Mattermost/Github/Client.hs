@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators     #-}
 
-module Mattermost.Github
+module Mattermost.Github.Client
     ( Event(..)
 
     , postEvent
@@ -23,8 +23,8 @@ import           App
 
 import           Github.Event.Types
 
-import           Mattermost.Message
 import           Mattermost.Api
+import           Mattermost.Github.Message
 
 -- ----------------------------------------------
 
@@ -45,14 +45,7 @@ postEvent e = do
   return NoContent
 
   where
-  message = renderMessage messageTemplate . evtPayload $ e
-  messageTemplate = MessagePayload
-    { mptText         = Nothing
-    , mptUsername     = Just "GitHub"
-    , mptIcon_url     = Just "http://i.imgur.com/NQA4pPs.png"
-    , mptChannel      = Nothing
-    , mptAttachments  = []
-    }
+  message = renderMessage . evtPayload $ e
 
 -- ----------------------------------------------
 

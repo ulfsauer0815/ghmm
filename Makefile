@@ -23,9 +23,6 @@ test: build
 test-live: build
 	. ./cfg/dev && stack exec ghmm-test-exe
 
-.PHONY: test-json
-test-json: build
-	. ./cfg/dev && rm -f "$$TEST_LOG" && stack test && cat "$$TEST_LOG" | xclip -selection c
 
 $(PING_URL_FILE):
 	. ./cfg/dev && \
