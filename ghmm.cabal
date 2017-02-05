@@ -14,45 +14,44 @@ build-type:          Simple
 cabal-version:       >=1.10
 -- http://stackoverflow.com/questions/29361413/including-data-files-only-in-cabal-test-suites
 -- https://github.com/commercialhaskell/stack/issues/548
-extra-source-files:  test/data/event/push.json
+extra-source-files:  test/data/event/issuecomment.json
                    , test/data/event/pullrequest.json
-                   , test/data/event/status.json
-                   , test/data/event/issuecomment.json
                    , test/data/event/pullrequestreview.json
                    , test/data/event/pullrequestreviewcomment.json
+                   , test/data/event/push.json
+                   , test/data/event/status.json
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Lib
-                     , App
+  exposed-modules:     App
+                     , Configuration
                      , Github.Api
                      , Github.Event.Filter
-                     , Github.Event.Types
                      , Github.Event.Json
+                     , Github.Event.Types
+                     , JsonOptions
+                     , Lib
                      , Mattermost.Api
-                     , Mattermost.Types
                      , Mattermost.Github.Client
                      , Mattermost.Github.Message
+                     , Mattermost.Types
                      , Message.Markdown
                      , Message.Util
                      , Util
-                     , Configuration
-                     , JsonOptions
   build-depends:       base >= 4.7 && < 5
-                     , containers
                      , aeson
-                     , servant-server
+                     , bytestring
+                     , containers
+                     , hslogger
+                     , http-client
+                     , monad-control
+                     , mtl
                      , servant-client
+                     , servant-server
+                     , text
+                     , transformers
                      , wai
                      , warp
-                     , bytestring
-                     , text
-                     , http-client
-                     , transformers
-                     , bytestring
-                     , monad-control
-                     , hslogger
-                     , mtl
   default-language:    Haskell2010
   ghc-options:         -fwarn-unused-imports
                        -fwarn-incomplete-patterns
@@ -67,23 +66,23 @@ executable ghmm-exe
                      , LogFormatter
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base
-                     , text
-                     , transformers
-                     , warp
-                     , wai
-                     , wai-extra
+                     , ghmm
+                     , ansi-terminal
+                     , base16-bytestring
+                     , bytestring
+                     , case-insensitive
+                     , cryptonite
+                     , hslogger
                      , http-client
                      , http-client-tls
-                     , cryptonite
-                     , memory
-                     , base16-bytestring
-                     , case-insensitive
-                     , word8
                      , http-types
-                     , bytestring
-                     , hslogger
-                     , ansi-terminal
-                     , ghmm
+                     , memory
+                     , text
+                     , transformers
+                     , wai
+                     , wai-extra
+                     , warp
+                     , word8
   default-language:    Haskell2010
 
 executable ghmm-test-exe
@@ -92,30 +91,30 @@ executable ghmm-test-exe
   other-modules:
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base
-                     , text
-                     , bytestring
-                     , transformers
+                     , ghmm
                      , aeson
-                     , servant-client
+                     , bytestring
                      , http-client
                      , http-client-tls
-                     , ghmm
+                     , servant-client
+                     , text
+                     , transformers
   default-language:    Haskell2010
 
 test-suite ghmm-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Spec.hs
-  other-modules:       Message.UtilSpec
-                     , Github.Event.JsonSpec
+  other-modules:       Github.Event.JsonSpec
+                     , Message.UtilSpec
   build-depends:       base
                      , ghmm
+                     , aeson
+                     , bytestring
                      , hspec
                      , QuickCheck
                      , quickcheck-instances
                      , text
-                     , bytestring
-                     , aeson
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
 
