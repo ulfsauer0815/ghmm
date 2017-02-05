@@ -21,9 +21,9 @@ import           Servant.Client
 
 import           App
 
-import           Github.Event.Message
 import           Github.Event.Types
 
+import           Mattermost.Message
 import           Mattermost.Api
 
 -- ----------------------------------------------
@@ -35,9 +35,9 @@ postEvent e = do
   mmApiKey          <- cfg cfgMattermostApiKey
   httpClientManager <- asks ctxHttpClientManager
   res <- liftIO $ do
-    debugM $ "Posting message to mattermost: " <> T.unpack messageText
+    debugM $ "Posting message to mattermost: " <> show message
     runExceptT $ hook mmApiKey
-      payload
+      message
       httpClientManager (BaseUrl Https (T.unpack mmUrl) mmPort "") -- TODO: hardcoded https?
   case res of
     Left err        -> liftIO . errorM $ "Unable to post to mattermost: " <> show err
@@ -45,9 +45,9 @@ postEvent e = do
   return NoContent
 
   where
-  messageText = renderMessageText . evtPayload $ e
-  payload = MessagePayload
-    { mptText         = Just messageText
+  message = renderMessage messageTemplate . evtPayload $ e
+  messageTemplate = MessagePayload
+    { mptText         = Nothing
     , mptUsername     = Just "GitHub"
     , mptIcon_url     = Just "http://i.imgur.com/NQA4pPs.png"
     , mptChannel      = Nothing

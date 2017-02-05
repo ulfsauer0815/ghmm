@@ -27,10 +27,10 @@ library
                      , App
                      , Github.Api
                      , Github.Event.Filter
-                     , Github.Event.Message
                      , Github.Event.Types
                      , Github.Event.Json
                      , Mattermost.Api
+                     , Mattermost.Message
                      , Mattermost.Types
                      , Mattermost.Github
                      , Message.Markdown

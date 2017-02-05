@@ -52,8 +52,8 @@ instance ToJSON Attachment where
 
 data Field = Field
   { fldShort :: Bool
-  , fldTitle :: Text
-  , fldValue :: Text
+  , fldTitle :: Maybe Text
+  , fldValue :: Maybe Text
   }
   deriving (Eq, Show, Generic)
 

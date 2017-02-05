@@ -20,9 +20,9 @@ import           Servant.Client
 
 import           Configuration
 import           Github.Event.Json
-import           Github.Event.Message
 import           Github.Event.Types
 import           Mattermost.Api
+import           Mattermost.Message
 
 -- ----------------------------------------------
 
@@ -51,12 +51,12 @@ main = do
 sendEvent :: Manager -> Configuration -> EventPayload -> IO ()
 sendEvent clientManager Configuration{..} event = do
   result <- runExceptT $ hook cfgMattermostApiKey
-    payload
+    (renderMessage messageTemplate event)
     clientManager (BaseUrl Https (T.unpack cfgMattermostUrl) cfgMattermostPort "")
   when (isLeft result) $ print result
   where
-  payload = MessagePayload
-    { mptText        = Just $ renderMessageText event
+  messageTemplate = MessagePayload
+    { mptText        = Nothing
     , mptUsername    = Just "GitHub Test"
     , mptIcon_url    = Just "http://i.imgur.com/fzz0wsH.jpg"
     , mptChannel     = Just cfgMattermostChannel
