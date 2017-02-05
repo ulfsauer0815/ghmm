@@ -6,6 +6,8 @@ module Mattermost.Api
     ( Api
 
     , MessagePayload(..)
+    , Attachment(..)
+    , Field(..)
 
     , hook
     , api

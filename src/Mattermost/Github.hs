@@ -47,10 +47,11 @@ postEvent e = do
   where
   messageText = renderMessageText . evtPayload $ e
   payload = MessagePayload
-    { text = messageText
-    , username = Just "GitHub"
-    , icon_url = Just "http://i.imgur.com/NQA4pPs.png"
-    , channel  = Nothing
+    { mptText         = Just messageText
+    , mptUsername     = Just "GitHub"
+    , mptIcon_url     = Just "http://i.imgur.com/NQA4pPs.png"
+    , mptChannel      = Nothing
+    , mptAttachments  = []
     }
 
 -- ----------------------------------------------

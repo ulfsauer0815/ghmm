@@ -49,16 +49,18 @@ main = do
 -- ----------------------------------------------
 
 sendEvent :: Manager -> Configuration -> EventPayload -> IO ()
-sendEvent clientManager Configuration{..} event =
-  void . runExceptT $ hook cfgMattermostApiKey
+sendEvent clientManager Configuration{..} event = do
+  result <- runExceptT $ hook cfgMattermostApiKey
     payload
     clientManager (BaseUrl Https (T.unpack cfgMattermostUrl) cfgMattermostPort "")
+  when (isLeft result) $ print result
   where
   payload = MessagePayload
-    { text     = renderMessageText event
-    , username = Just "GitHub Test"
-    , icon_url = Just "http://i.imgur.com/fzz0wsH.jpg"
-    , channel  = Just cfgMattermostChannel
+    { mptText        = Just $ renderMessageText event
+    , mptUsername    = Just "GitHub Test"
+    , mptIcon_url    = Just "http://i.imgur.com/fzz0wsH.jpg"
+    , mptChannel     = Just cfgMattermostChannel
+    , mptAttachments = []
     }
 
 

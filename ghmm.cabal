@@ -37,6 +37,7 @@ library
                      , Message.Util
                      , Util
                      , Configuration
+                     , JsonOptions
   build-depends:       base >= 4.7 && < 5
                      , containers
                      , aeson

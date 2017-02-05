@@ -26,9 +26,9 @@ module Github.Event.Types
 import           GHC.Generics
 
 import           Data.Aeson
-import           Data.Aeson.Types
-import           Data.Char
 import           Data.Text        (Text)
+
+import qualified JsonOptions      as Json
 
 -- ----------------------------------------------
 
@@ -82,7 +82,7 @@ data EventPayload
     } deriving (Eq, Show, Generic)
 
 instance FromJSON EventPayload where
-  parseJSON = genericParseJSON jsonParseOpts
+  parseJSON = genericParseJSON Json.parseOptions
 
 
 data PushCommit = PushCommit
@@ -91,7 +91,7 @@ data PushCommit = PushCommit
   } deriving (Eq, Show, Generic)
 
 instance FromJSON PushCommit where
-  parseJSON = genericParseJSON jsonParseOpts
+  parseJSON = genericParseJSON Json.parseOptions
 
 
 {-# ANN type Commit ("HLint: ignore Use camelCase" :: Text) #-}
@@ -101,7 +101,7 @@ data Commit = Commit
   } deriving (Eq, Show, Generic)
 
 instance FromJSON Commit where
-  parseJSON = genericParseJSON jsonParseOpts
+  parseJSON = genericParseJSON Json.parseOptions
 
 
 {-# ANN type Repository ("HLint: ignore Use camelCase" :: Text) #-}
@@ -112,7 +112,7 @@ data Repository = Repository
   } deriving (Eq, Show, Generic)
 
 instance FromJSON Repository where
-  parseJSON = genericParseJSON jsonParseOpts
+  parseJSON = genericParseJSON Json.parseOptions
 
 
 data Pusher = Pusher
@@ -130,7 +130,7 @@ data PullRequest = PullRequest
   } deriving (Eq, Show, Generic)
 
 instance FromJSON PullRequest where
-  parseJSON = genericParseJSON jsonParseOpts
+  parseJSON = genericParseJSON Json.parseOptions
 
 {-# ANN type Comment ("HLint: ignore Use camelCase" :: Text) #-}
 data Comment = Comment
@@ -140,7 +140,7 @@ data Comment = Comment
   } deriving (Eq, Show, Generic)
 
 instance FromJSON Comment where
-  parseJSON = genericParseJSON jsonParseOpts
+  parseJSON = genericParseJSON Json.parseOptions
 
 {-# ANN type User ("HLint: ignore Use camelCase" :: Text) #-}
 data User = User
@@ -149,7 +149,7 @@ data User = User
   } deriving (Eq, Show, Generic)
 
 instance FromJSON User where
-  parseJSON = genericParseJSON jsonParseOpts
+  parseJSON = genericParseJSON Json.parseOptions
 
 {-# ANN type Issue ("HLint: ignore Use camelCase" :: Text) #-}
 data Issue = Issue
@@ -160,29 +160,18 @@ data Issue = Issue
   } deriving (Eq, Show, Generic)
 
 instance FromJSON Issue where
-  parseJSON = genericParseJSON jsonParseOpts
+  parseJSON = genericParseJSON Json.parseOptions
 
 {-# ANN type Review ("HLint: ignore Use camelCase" :: Text) #-}
 data Review = Review
-  { revHtml_url     :: Text
-  , revBody         :: Text
-  , revState        :: Text
-  , revUser         :: User
+  { revHtml_url :: Text
+  , revBody     :: Text
+  , revState    :: Text
+  , revUser     :: User
   } deriving (Eq, Show, Generic)
 
 instance FromJSON Review where
-  parseJSON = genericParseJSON jsonParseOpts
-
-
--- TODO: smarter way to detect prefix (for camel and snake case)
-jsonParseOpts :: Options
-jsonParseOpts = defaultOptions
-  { fieldLabelModifier = labelModifier
-  ,sumEncoding = ObjectWithSingleField
-  }
-  where
-  labelModifier name = let (x:xs) = drop 3 name in switchCase x : xs -- XXX: don't forget the prefix or BOOM
-  switchCase a = if isUpper a then toLower a else toUpper a
+  parseJSON = genericParseJSON Json.parseOptions
 
 -- ----------------------------------------------
 
