@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
 
+-- | GitHub event filter functions.
 module Github.Event.Filter
   ( isInterestingEvent
   ) where
@@ -9,6 +10,7 @@ import           Github.Api
 
 -- ----------------------------------------------
 
+-- | If an 'Event' is interesting enough to be considered for publication.
 isInterestingEvent :: Event -> Bool
 isInterestingEvent e
   =  isInterestingPR p

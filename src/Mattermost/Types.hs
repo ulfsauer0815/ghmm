@@ -3,6 +3,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators     #-}
 
+-- | Mattermost message types and instances.
 module Mattermost.Types
     ( MessagePayload(..)
     , Attachment(..)
@@ -22,6 +23,9 @@ import qualified JsonOptions  as Json
 
 {-# ANN type MessagePayload ("HLint: ignore Use camelCase" :: Text) #-}
 
+-- | The Mattermost message payload.
+--
+--   See <https://docs.mattermost.com/developer/webhooks-incoming.html#creating-integrations-using-incoming-webhooks Mattermost Incoming Webhooks>.
 data MessagePayload
   = MessagePayload
      { mptText        :: Maybe Text
@@ -54,6 +58,7 @@ instance ToJSON Attachment where
   toEncoding = genericToEncoding Json.parseOptions
 
 
+-- | Display information in a table format inside the attachment.
 data Field = Field
   { fldShort :: Bool
   , fldTitle :: Maybe Text
@@ -66,6 +71,7 @@ instance ToJSON Field where
 
 -- ----------------------------------------------
 
+-- | Convenience function to construct attachments.
 attachment :: Attachment
 attachment = Attachment
   { attFallback    = Nothing

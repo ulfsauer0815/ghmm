@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
+-- | Utility functions.related to messages.
 module Message.Util
     ( shorten
     ) where

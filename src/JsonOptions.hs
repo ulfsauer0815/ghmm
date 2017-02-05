@@ -1,3 +1,4 @@
+-- | Common aeson 'Data.Aeson.Types.Options' used in this app.
 module JsonOptions
   ( parseOptions
   , encodingOptions
@@ -9,6 +10,7 @@ import           Data.Char
 
 -- ----------------------------------------------
 
+-- | Common options for parsing.
 parseOptions :: Options
 parseOptions = defaultOptions
   { fieldLabelModifier = labelModifier
@@ -19,6 +21,7 @@ parseOptions = defaultOptions
   switchCase a = if isUpper a then toLower a else toUpper a
 
 
+-- | Common options for encoding.
 encodingOptions :: Options
 encodingOptions = defaultOptions
   { fieldLabelModifier = labelModifier

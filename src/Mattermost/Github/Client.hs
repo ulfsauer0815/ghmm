@@ -2,6 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators     #-}
 
+-- | The Mattermost client.
 module Mattermost.Github.Client
     ( Event(..)
 
@@ -28,6 +29,7 @@ import           Mattermost.Github.Message
 
 -- ----------------------------------------------
 
+-- | Post an GitHub event to Mattermost.
 postEvent :: Event -> App NoContent
 postEvent e = do
   mmUrl             <- cfg cfgMattermostUrl

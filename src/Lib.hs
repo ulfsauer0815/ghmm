@@ -2,6 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators     #-}
 
+-- | The app listening for GitHub events and relaying them to Mattermost.
 module Lib
     ( startApp
     , app
@@ -42,9 +43,11 @@ convertApp ctx = Nat (flip runReaderT ctx . runApp)
 
 -- ----------------------------------------------
 
+-- | Start the app with the given context.
 startApp :: AppContext -> IO ()
 startApp ctx = run (cfgPort . ctxConfiguration $ ctx) (app ctx)
 
+-- | The app as an WAI 'Application' with the given context.
 app :: AppContext -> Application
 app ctx = serve (Proxy :: Proxy Github.Api) (appToServer ctx)
 
@@ -54,6 +57,8 @@ api = Proxy
 -- ----------------------------------------------
 
 -- TODO: don't block
+-- | The GitHub API 'Github.API' handler.
+--   Handles incoming webhook calls and posts messages to Mattermost.
 eventHandler :: Maybe Text -> Maybe Text-> Value -> App NoContent
 eventHandler deliveryHeader eventHeader jsonEvent =
   case deliveryHeader of
@@ -68,6 +73,10 @@ eventHandler deliveryHeader eventHeader jsonEvent =
         Just eventType ->
           eventHandler' deliveryId eventType jsonEvent
 
+
+-- | The happy path of the 'eventHandler'.
+--   Parses the incoming event using the header data and renders a message which
+--   is sent to Mattermost.
 eventHandler' :: Text -> Text -> Value -> App NoContent
 eventHandler' deliveryId eventType jsonEvent = do
   liftIO $ do
@@ -85,6 +94,8 @@ eventHandler' deliveryId eventType jsonEvent = do
       return NoContent
 
 
+-- | Handle an GitHub 'Event'..
+--   Posts the event to Mattermost if it is interesting enough.
 handleEvent :: Event -> App NoContent
 handleEvent e =
   if isInterestingEvent e

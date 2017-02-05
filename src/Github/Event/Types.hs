@@ -3,6 +3,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators     #-}
 
+-- | GitHub event types and instances.
 module Github.Event.Types
     ( Event(..)
     , EventPayload(..)
@@ -32,28 +33,34 @@ import qualified JsonOptions      as Json
 
 -- ----------------------------------------------
 
+-- | An GitHub event including metadata.
 data Event = Event
-  { evtPayload :: EventPayload
-  , evtType    :: Text
-  , evtId      :: Text
+  { evtPayload :: EventPayload -- ^ The event payload
+  , evtType    :: Text         -- ^ The event name, as set in the @X-GitHub-Event@ header
+  , evtId      :: Text         -- ^ The delivery id, as set in the @X-GitHub-Delivery@ header
   }
 
 
 {-# ANN type EventPayload ("HLint: ignore Use camelCase" :: Text) #-}
+-- | The GitHub event payload.
 data EventPayload
-  = PushEvent
+  =
+    -- | A <https://developer.github.com/v3/activity/events/types/#pushevent push> event.
+    PushEvent
     { epuRef         :: Text
     , epuCommits     :: [PushCommit]
     , epuHead_commit :: PushCommit
     , epuCompare     :: Text
     , epuRepository  :: Repository
     }
+    -- | A <https://developer.github.com/v3/activity/events/types/#pullrequestevent pull_request> event.
   | PullRequestEvent
     { eprAction       :: Text
     , eprNumber       :: Int
     , eprPull_request :: PullRequest
     , eprRepository   :: Repository
     }
+    -- | A <https://developer.github.com/v3/activity/events/types/#statusevent status> event.
   | StatusEvent
     { estSha         :: Text
     , estState       :: Text
@@ -62,18 +69,21 @@ data EventPayload
     , estTarget_url  :: Maybe Text
     , estRepository  :: Repository
     }
+    -- | A <https://developer.github.com/v3/activity/events/types/#issuecommentevent issue_comment> event.
   | IssueCommentEvent
     { ecoAction     :: Text
     , ecoIssue      :: Issue
     , ecoComment    :: Comment
     , ecoRepository :: Repository
     }
+    -- | A <https://developer.github.com/v3/activity/events/types/#pullrequestreviewevent pull_request_review> event.
   | PullRequestReviewEvent
     { ervAction       :: Text
     , ervReview       :: Review
     , ervPull_request :: PullRequest
     , ervRepository   :: Repository
     }
+    -- | A <https://developer.github.com/v3/activity/events/types/#pullrequestreviewcommentevent pull_request_review_comment> event.
   | PullRequestReviewCommentEvent
     { ercAction       :: Text
     , ercComment      :: Comment
@@ -175,26 +185,32 @@ instance FromJSON Review where
 
 -- ----------------------------------------------
 
+-- | If the event is a push event.
 isPushEvent :: EventPayload -> Bool
 isPushEvent PushEvent{} = True
 isPushEvent _           = False
 
+-- | If the event is a pull request event.
 isPullRequestEvent :: EventPayload -> Bool
 isPullRequestEvent PullRequestEvent{} = True
 isPullRequestEvent _                  = False
 
+-- | If the event is a status event.
 isStatusEvent :: EventPayload -> Bool
 isStatusEvent StatusEvent{} = True
 isStatusEvent _             = False
 
+-- | If the event is an issue comment event.
 isIssueCommentEvent :: EventPayload -> Bool
 isIssueCommentEvent IssueCommentEvent{} = True
 isIssueCommentEvent _                   = False
 
+-- | If the event is a review event.
 isPullRequestReviewEvent :: EventPayload -> Bool
 isPullRequestReviewEvent PullRequestReviewEvent{} = True
 isPullRequestReviewEvent _                        = False
 
+-- | If the event is a review comment event.
 isPullRequestReviewCommentEvent :: EventPayload -> Bool
 isPullRequestReviewCommentEvent PullRequestReviewCommentEvent{} = True
 isPullRequestReviewCommentEvent _                               = False

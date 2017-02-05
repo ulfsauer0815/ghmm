@@ -1,6 +1,7 @@
 {-# LANGUAGE ConstraintKinds   #-}
 {-# LANGUAGE OverloadedStrings #-}
 
+-- | Utility functions related to message formatting, especially markdown.
 module Message.Markdown
     ( quote
     , ml
@@ -27,7 +28,9 @@ import           Data.String (IsString)
 
 -- ----------------------------------------------
 
+-- | Type constraints for spring-like types.
 type Stringish s = (Monoid s, IsString s, Eq s)
+
 
 -- | Text as a codeblock
 codeblock :: Stringish m => m -> m
@@ -53,6 +56,7 @@ bold = italic . italic
 blockquote :: Stringish m => m -> m
 blockquote = tl "> "
 
+-- | List of items.
 itemize :: Stringish m => [m] -> [m]
 itemize = map (tl "- ")
 
@@ -68,27 +72,35 @@ mr = tr " "
 ma :: Stringish m => m -> m
 ma = ta " "
 
+-- | Text left.
 tl :: Stringish m => m -> m -> m
 tl prefix = nonNull $ \text -> prefix <> text
 
+-- | Text right.
 tr :: Stringish m => m -> m -> m
 tr suffix = nonNull $ \text -> text <> suffix
 
+-- | Surrounding text.
 ta :: Stringish m => m -> m -> m
 ta surrfix = tl surrfix . tr surrfix
 
+-- | Headline h1.
 h1 :: Stringish m => m -> m
 h1 = tl "# "
 
+-- | Headline h2.
 h2 :: Stringish m => m -> m
 h2 = tl "## "
 
+-- | Headline h3.
 h3 :: Stringish m => m -> m
 h3 = tl "### "
 
+-- | Headline h4.
 h4 :: Stringish m => m -> m
 h4 = tl "#### "
 
+-- | Headline h5.
 h5 :: Stringish m => m -> m
 h5 = tl "##### "
 
@@ -96,16 +108,19 @@ h5 = tl "##### "
 nonNull :: Stringish m  => (m -> m) -> m -> m
 nonNull f m = if m == mempty then m else f m
 
+-- | New line.
 nl :: (IsString s) => s
 nl = "\n"
 
+-- | 'Maybe' to 'Stringish'. 'Nothing' is the empty string / 'mempty'.
 cmb :: (Stringish s) => Maybe s -> s
 cmb = fromMaybe mempty
 
+-- | 'unlines' with the newline \'\\n\' character.
 uln :: (Stringish s) => [s] -> s
 uln = intercalate (\x y-> x <> "\n" <> y)
 
-
+-- | 'Data.Text.intercalate' for 'Monoid's.
 intercalate :: Monoid s => (s -> s -> s) -> [s] -> s
 intercalate f = ic
   where

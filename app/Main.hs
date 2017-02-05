@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
+-- | The server listening for GitHub events and relaying them to Mattermost.
 module Main where
 
 import           System.IO
@@ -24,6 +25,7 @@ import           LogFormatter
 -- ----------------------------------------------
 
 -- TODO: pimp error handling (Maybe -> Either/Except?)
+-- | Starts the server.
 main :: IO ()
 main = do
   initLoggers DEBUG
@@ -42,6 +44,10 @@ main = do
       errorM "Incomplete/invalid configuration"
 
 
+-- | Reads the configuration from environment variables.
+--   If a property is missing, it will fail.
+--   If a property is malformed it will either silently fall back to the default
+--   or fail as well.
 readConfig :: ConfigReader Configuration
 readConfig =
   Configuration
@@ -53,6 +59,7 @@ readConfig =
     <*> env           "MATTERMOST_API_KEY"
 
 
+-- | Initialize the loggers with the log level.
 initLoggers :: Priority -> IO ()
 initLoggers prio = do
   -- root does not have a priority
@@ -64,6 +71,7 @@ initLoggers prio = do
   updateGlobalLogger rootLoggerName (setHandlers [handlerBare])
 
 
+-- | Log output format.
 logFormat :: String
 logFormat = "[$time : $loggername : $prio] $msg"
 

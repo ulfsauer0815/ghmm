@@ -1,3 +1,11 @@
+-- | Colored log formatter.
+--
+--   * 'simpleColorLogFormatter' works like
+--     'Console.Log.Formatter.simpleLogFormatter' but additionally colors the
+--     output depending on the log level
+--   * 'getSimpleLogFormatter' returns either the simple log formatter or the
+--     color-enabled formatter depending on if the handle supports ANSI.
+--   * 'simpleLogFormatter' is a reexport for convenience
 module LogFormatter
     ( simpleColorLogFormatter
     , simpleLogFormatter

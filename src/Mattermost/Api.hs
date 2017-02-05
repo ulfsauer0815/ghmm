@@ -22,6 +22,7 @@ import           Mattermost.Types
 
 -- ----------------------------------------------
 
+-- | Mattermost API type.
 type Api =
        "hooks" :> Capture "key" Text :> ReqBody '[JSON] MessagePayload :> Post '[JSON] NoContent
 
@@ -31,5 +32,6 @@ api :: Proxy Api
 api = Proxy
 
 -- hook :: Text -> MessagePayload -> Manager -> BaseUrl-> ClientM NoContent
+-- | Client for the Mattermost API.
 hook :: Client Api
 hook = client api

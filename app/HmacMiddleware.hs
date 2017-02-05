@@ -4,6 +4,8 @@
 -- TODO: rewrite this abomination
 -- TODO: move to separate project
 
+-- | HMAC middleware (for Github webhook calls) to filter requests that do not
+--   have the correct signature generated with the shared secret.
 module HmacMiddleware
     ( hmacAuth
     , AuthSettings (..)
@@ -33,6 +35,7 @@ import           Network.Wai
 
 -- ----------------------------------------------
 
+-- | Settings for the middleware.
 data AuthSettings hash = AuthSettings
     { authHeader :: CI ByteString                 -- ^ Name of the header containing the HMAC-signature
     , authSecret :: ByteString                    -- ^ Secret for HMAC calculation
@@ -42,16 +45,16 @@ data AuthSettings hash = AuthSettings
     }
 
 
--- | Auth failures
+-- | Auth failures.
 data AuthException
-  = MissingHeader
-  | MalformedSignature
-  | SignatureMismatch
+  = MissingHeader       -- ^ The header containing the signature is missing
+  | MalformedSignature  -- ^ The signature does not have the expected format
+  | SignatureMismatch   -- ^ The signature does not match (maybe using a different secret)
   deriving Show
 
 -- ----------------------------------------------
 
--- | HMAC authentication middleware
+-- | HMAC authentication middleware.
 hmacAuth :: forall hash . HashAlgorithm hash
   => AuthSettings hash
   -> Middleware
@@ -85,6 +88,7 @@ hmacAuth cfg app req resp = do
 
 -- ----------------------------------------------
 
+-- | The default settings, which work for Github webhook events
 defaultAuthSettings :: ByteString -> AuthSettings SHA1
 defaultAuthSettings secret = AuthSettings
   { authHeader = "x-hub-signature"
@@ -96,6 +100,12 @@ defaultAuthSettings secret = AuthSettings
 
 -- ----------------------------------------------
 
+-- | Calculates the HMAC signature and returns the unconsumed request body.
+--
+--   The request's message body is consumed to calculate the signature.
+--   A new request with a new body is therefore created.
+--
+--   /Note/: The request body has been consumed and cannot be used anymore.
 calculateSignature :: forall m hash . ( MonadIO m, HashAlgorithm hash )
   => AuthSettings hash -> Request -> m (Request, ByteString)
 calculateSignature cfg req = do
@@ -105,7 +115,10 @@ calculateSignature cfg req = do
   return (req', toHexByteString hashed) -- digestToHexByteString hashed with cryptohash (2 less deps...)
 
 
--- taken from: wai-extra/src/Network/Wai/Middleware/RequestLogger.hs
+-- | Get (and consume) the request body and create a new request with a new body
+--   which is ready to be consumed.
+--
+--  Taken from: @wai-extra/src/Network/Wai/Middleware/RequestLogger.hs@.
 getRequestBody :: Request -> IO (Request, [BS8.ByteString])
 getRequestBody req = do
   let loop front = do
@@ -123,5 +136,6 @@ getRequestBody req = do
   return (req', body)
 
 
+-- | Return the hexadecimal representation of the digest.
 toHexByteString :: ByteArrayAccess a => a -> ByteString
 toHexByteString = BSB16.encode . BA.convert

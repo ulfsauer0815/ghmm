@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
+-- | Rendering of GitHub events as Mattermost messages.
 module Mattermost.Github.Message
     ( renderMessage
     , renderMessage'
@@ -14,10 +15,15 @@ import           Message.Markdown
 
 -- ----------------------------------------------
 
+-- | Render a GitHub 'EventPayload' as a Mattermost 'MessagePayload'.
+--
+--   Uses a message template for generic fields, see 'messageTemplate' and
+--   'renderMessage''.
 renderMessage :: EventPayload -> MessagePayload
 renderMessage = renderMessage' messageTemplate
 
-
+-- | Render a GitHub 'EventPayload' as a Mattermost 'MessagePayload' using the
+--   supplied message template.
 renderMessage' :: MessagePayload -> EventPayload -> MessagePayload
 renderMessage' message event
   = case event of
@@ -143,7 +149,7 @@ renderMessage' message event
   fromEmpty x Nothing   = x
 
 
-
+-- | Default Mattermost message template.
 messageTemplate :: MessagePayload
 messageTemplate = MessagePayload
     { mptText         = Nothing
