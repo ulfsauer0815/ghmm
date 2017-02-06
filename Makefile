@@ -23,6 +23,10 @@ test: build
 test-live: build
 	. ./cfg/dev && stack exec ghmm-test-exe
 
+.PHONY: lint
+lint:
+	find . -type f -iname '*.hs' -print0 | xargs -0 hlint
+
 
 $(PING_URL_FILE):
 	. ./cfg/dev && \
