@@ -79,13 +79,12 @@ eventHandler deliveryHeader eventHeader jsonEvent =
 --   is sent to Mattermost.
 eventHandler' :: Text -> Text -> Value -> App NoContent
 eventHandler' deliveryId eventType jsonEvent = do
-  liftIO $ do
-    debugM $ "Handling GitHub event type: " <> show eventType
-    debugM $ "Handling GitHub event: " <> show jsonEvent
+  liftIO . debugM $ "Handling GitHub event \"" <> show eventType <> "\": " <> show jsonEvent
   case decodeEvent eventType jsonEvent of
     Right e  -> do
-      liftIO . debugM $ "Parsed GitHub event: " <> show e
-      handleEvent $ Event e eventType deliveryId
+      let event = Event e eventType deliveryId
+      liftIO . debugM $ "Parsed GitHub event: " <> show event
+      handleEvent event
     Left msg -> do
       liftIO . warningM $
         "Unable to parse GitHub event type \""

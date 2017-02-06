@@ -38,7 +38,7 @@ data Event = Event
   { evtPayload :: EventPayload -- ^ The event payload
   , evtType    :: Text         -- ^ The event name, as set in the @X-GitHub-Event@ header
   , evtId      :: Text         -- ^ The delivery id, as set in the @X-GitHub-Delivery@ header
-  }
+  } deriving (Show)
 
 
 {-# ANN type EventPayload ("HLint: ignore Use camelCase" :: Text) #-}
