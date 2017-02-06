@@ -7,7 +7,6 @@ module Github.Event.Filter
   ) where
 
 import           Github.Api
-import           Github.Event.Types
 
 -- ----------------------------------------------
 

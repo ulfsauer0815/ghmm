@@ -5,16 +5,7 @@
 module Github.Api
     ( Api
 
-    , Event(..)
-    , EventPayload(..)
-    , Commit(..)
-    , PushCommit(..)
-    , Repository(..)
-    , PullRequest(..)
-    , Issue(..)
-    , Comment(..)
-    , User(..)
-    , Review(..)
+    , module Github.Event.Types
     ) where
 
 import           Data.Aeson
