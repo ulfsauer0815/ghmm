@@ -137,6 +137,7 @@ data PullRequest = PullRequest
   , purHtml_url :: Text
   , purState    :: Text
   , purTitle    :: Text
+  , purMerged   :: Maybe Bool
   } deriving (Eq, Show, Generic)
 
 instance FromJSON PullRequest where

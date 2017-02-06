@@ -1,3 +1,4 @@
+{-# LANGUAGE MultiWayIf        #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 -- | Rendering of GitHub events as Mattermost messages.
@@ -6,6 +7,7 @@ module Mattermost.Github.Message
     , renderMessage'
     ) where
 
+import           Data.Maybe
 import           Data.Monoid
 import qualified Data.Text        as T
 
@@ -47,13 +49,13 @@ renderMessage' message event
         in repoPrefix repository
              <> link "Push" compareUrl <> ": " <> commitsText <> (tl " on " . codeblock) branch
 
-    PullRequestEvent action _ (PullRequest number htmlUrl _state title) repository ->
+    PullRequestEvent action _ (PullRequest number htmlUrl _state title merged) repository ->
       message
         { mptAttachments = [
             attachment
               { attPretext     = Just text
               , attText        = Just title
-              , attColor       = Just "#23A2FF"
+              , attColor       = Just color
               , attFields      = [
                   Field
                     { fldShort = True
@@ -67,7 +69,15 @@ renderMessage' message event
       where
       text = repoPrefix repository
                 <> link ("Pull Request" <> (tl " #" . T.pack . show) number) htmlUrl
-      actionText = if action == "synchronize" then "sync" else action
+      actionText = if | wasJustMerged            -> "merged"
+                      | action == "synchronized" -> "sync"
+                      | otherwise -> action
+      color = if | wasJustMerged           -> "#6E5494"
+                 |    action == "opened"
+                   || action == "reopened" -> "#23A2FF"
+                 | action == "closed"      -> "#FF9999"
+                 | otherwise               -> "#99D4FF"
+      wasJustMerged = action == "closed" && fromMaybe False merged
 
     StatusEvent _ state description (Commit sha commitUrl) targetUrl repository ->
       message
@@ -102,7 +112,7 @@ renderMessage' message event
         in  repoPrefix repository
              <> link "Comment" commentHtmlUrl <> (ml . italic) optAction
 
-    PullRequestReviewEvent _action (Review rvHtmlUrl rvBody _state rvUser) (PullRequest number _ _prState title) repository ->
+    PullRequestReviewEvent _action (Review rvHtmlUrl rvBody _state rvUser) (PullRequest number _ _prState title _merged) repository ->
       message
         { mptAttachments = [
             attachment
@@ -118,7 +128,7 @@ renderMessage' message event
         repoPrefix repository
          <> link ("Pull Request #" <> (T.pack . show) number <> " Review") rvHtmlUrl <> tl ": " title
 
-    PullRequestReviewCommentEvent action (Comment commentHtmlUrl commentBody commentUser) (PullRequest number _ _state title) repository ->
+    PullRequestReviewCommentEvent action (Comment commentHtmlUrl commentBody commentUser) (PullRequest number _ _state title _merged) repository ->
       message
         { mptAttachments = [
             attachment
