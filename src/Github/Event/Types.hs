@@ -16,6 +16,7 @@ module Github.Event.Types
     , User(..)
     , Review(..)
 
+    , isPingEvent
     , isPushEvent
     , isPullRequestEvent
     , isStatusEvent
@@ -45,8 +46,14 @@ data Event = Event
 -- | The GitHub event payload.
 data EventPayload
   =
+    -- | A <https://developer.github.com/webhooks/#ping-event ping> event.
+    PingEvent
+    { epiZen         :: Text
+    , epiHook_id     :: Int
+    , epiRepository  :: Repository
+    }
     -- | A <https://developer.github.com/v3/activity/events/types/#pushevent push> event.
-    PushEvent
+  | PushEvent
     { epuRef         :: Text
     , epuCommits     :: [PushCommit]
     , epuHead_commit :: PushCommit
@@ -185,6 +192,11 @@ instance FromJSON Review where
   parseJSON = genericParseJSON Json.parseOptions
 
 -- ----------------------------------------------
+
+-- | If the event is a push event.
+isPingEvent :: EventPayload -> Bool
+isPingEvent PingEvent{} = True
+isPingEvent _           = False
 
 -- | If the event is a push event.
 isPushEvent :: EventPayload -> Bool

@@ -7,6 +7,7 @@ module Github.Event.Filter
   ) where
 
 import           Github.Api
+import           Github.Event.Types
 
 -- ----------------------------------------------
 
@@ -17,6 +18,7 @@ isInterestingEvent e
   || isInterestingComment p
   || isInterestingReviewComment p
   || isInterestingStatus p
+  || isPingEvent p
   where p = evtPayload e
 
 

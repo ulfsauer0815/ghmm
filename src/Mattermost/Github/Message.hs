@@ -30,6 +30,21 @@ renderMessage' :: MessagePayload -> EventPayload -> MessagePayload
 renderMessage' message event
   = case event of
 
+    PingEvent zen _hookId repository ->
+      message
+        { mptAttachments = [
+            attachment
+              { attPretext     = Just text
+              , attText        = Just zen
+              , attColor       = Just "#000000"
+              }
+          ]
+        }
+      where
+      text =
+        repoPrefix repository
+           <> "Ping"
+
     PushEvent ref commits _headCommit compareUrl repository ->
       message
         { mptAttachments = [

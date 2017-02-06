@@ -26,7 +26,8 @@ headerToConstructor :: Text -> Maybe Text
 headerToConstructor = flip M.lookup mapping
   where
   mapping = fromList
-    [ ("push",                        "PushEvent")
+    [ ("ping",                        "PingEvent")
+    , ("push",                        "PushEvent")
     , ("pull_request",                "PullRequestEvent")
     , ("status",                      "StatusEvent")
     , ("issue_comment",               "IssueCommentEvent")
