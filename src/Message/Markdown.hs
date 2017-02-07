@@ -19,12 +19,15 @@ module Message.Markdown
     , itemize
 
     , uln
+    , ln
     , cmb
     ) where
 
 import           Data.Maybe
 import           Data.Monoid
 import           Data.String (IsString)
+import           Data.Text   (Text)
+import qualified Data.Text   as T
 
 -- ----------------------------------------------
 
@@ -119,6 +122,9 @@ cmb = fromMaybe mempty
 -- | 'unlines' with the newline \'\\n\' character.
 uln :: (Stringish s) => [s] -> s
 uln = intercalate (\x y-> x <> "\n" <> y)
+
+ln :: Text -> [Text]
+ln = T.split (== '\n')
 
 -- | 'Data.Text.intercalate' for 'Monoid's.
 intercalate :: Monoid s => (s -> s -> s) -> [s] -> s

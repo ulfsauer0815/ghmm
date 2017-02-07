@@ -115,7 +115,7 @@ renderMessage' message event
         { mptAttachments = [
             attachment
               { attPretext     = Just text
-              , attText        = Just $ (blockquote . firstLine) commentBody
+              , attText        = Just $ commentify commentBody
               , attAuthor_name = Just $ usrLogin commentUser
               , attColor       = Just "#FFD9B3"
               }
@@ -132,7 +132,7 @@ renderMessage' message event
         { mptAttachments = [
             attachment
               { attPretext     = Just text
-              , attText        = Just $ (blockquote . firstLine) rvBody
+              , attText        = Just $ commentify rvBody
               , attAuthor_name = Just $ usrLogin rvUser
               , attColor       = Just "#FFC080"
               }
@@ -148,7 +148,7 @@ renderMessage' message event
         { mptAttachments = [
             attachment
               { attPretext     = Just text
-              , attText        = Just $ (blockquote . firstLine) commentBody
+              , attText        = Just $ commentify commentBody
               , attAuthor_name = Just $ usrLogin commentUser
               , attColor       = Just "#FFD9B3"
               }
@@ -172,6 +172,7 @@ renderMessage' message event
   fromEmpty x (Just "") = x
   fromEmpty _ (Just y)  = y
   fromEmpty x Nothing   = x
+  commentify = uln . map blockquote . ln
 
 
 -- | Default Mattermost message template.
