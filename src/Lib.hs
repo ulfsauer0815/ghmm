@@ -8,16 +8,17 @@ module Lib
     , app
     ) where
 
-import           Control.Monad.Except     (ExceptT)
+import           Control.Monad.Except       (ExceptT)
 import           Control.Monad.IO.Class
-import           Control.Monad.Reader     (runReaderT)
+import           Control.Monad.Reader       (runReaderT)
 
 
 import           Data.Aeson
+import qualified Data.ByteString.Lazy.Char8 as BS
 import           Data.Monoid
-import           Data.Text                (Text)
+import           Data.Text                  (Text)
 
-import qualified System.Log.Logger        as Log
+import qualified System.Log.Logger          as Log
 
 import           Network.Wai
 import           Network.Wai.Handler.Warp
@@ -25,7 +26,7 @@ import           Network.Wai.Handler.Warp
 import           Servant
 
 import           App
-import           Github.Api               as Github
+import           Github.Api                 as Github
 import           Github.Event.Filter
 import           Github.Event.Json
 import           Mattermost.Github.Client
@@ -79,7 +80,8 @@ eventHandler deliveryHeader eventHeader jsonEvent =
 --   is sent to Mattermost.
 eventHandler' :: Text -> Text -> Value -> App NoContent
 eventHandler' deliveryId eventType jsonEvent = do
-  liftIO . debugM $ "Handling GitHub event \"" <> show eventType <> "\": " <> show jsonEvent
+  liftIO . debugM $ "Handling GitHub event \"" <> show eventType <> "\": "
+                      <> (BS.unpack . encode $ jsonEvent)
   case decodeEvent eventType jsonEvent of
     Right e  -> do
       let event = Event e eventType deliveryId
