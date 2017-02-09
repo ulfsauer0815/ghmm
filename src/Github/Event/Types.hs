@@ -173,6 +173,7 @@ instance FromJSON User where
 {-# ANN type Issue ("HLint: ignore Use camelCase" :: Text) #-}
 data Issue = Issue
   { issState    :: Text
+  , issTitle    :: Text
   , issHtml_url :: Text
   , issUser     :: User
   -- XXX: add labels, assignee etc.

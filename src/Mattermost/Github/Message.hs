@@ -111,7 +111,7 @@ renderMessage' message event
         in  repoPrefix repository
              <> link ("Status (" <> shaify sha <> ")") htmlUrl
 
-    IssueCommentEvent action (Issue _state _ _) (Comment commentHtmlUrl commentBody commentUser) repository ->
+    IssueCommentEvent action (Issue _state title  _ _) (Comment commentHtmlUrl commentBody commentUser) repository ->
       message
         { mptAttachments = [
             attachment
@@ -126,7 +126,7 @@ renderMessage' message event
       text =
         let optAction = if action == "created" then "" else action
         in  repoPrefix repository
-             <> link "Comment" commentHtmlUrl <> (ml . italic) optAction
+             <> link "Comment" commentHtmlUrl <> (ml . italic) optAction <> tl ": " title
 
     PullRequestReviewEvent _action (Review rvHtmlUrl rvBody _state rvUser) (PullRequest number _ _prState title _merged _user) repository ->
       message
