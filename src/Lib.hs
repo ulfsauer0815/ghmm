@@ -80,7 +80,7 @@ eventHandler deliveryHeader eventHeader jsonEvent =
 --   is sent to Mattermost.
 eventHandler' :: Text -> Text -> Value -> App NoContent
 eventHandler' deliveryId eventType jsonEvent = do
-  liftIO . debugM $ "Handling GitHub event \"" <> show eventType <> "\": "
+  liftIO . debugM $ "Handling GitHub event " <> show eventType <> ": "
                       <> (BS.unpack . encode $ jsonEvent)
   case decodeEvent eventType jsonEvent of
     Right e  -> do
