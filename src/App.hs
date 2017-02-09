@@ -32,12 +32,13 @@ data AppContext = AppContext
 
 -- | The app configuration.
 data Configuration = Configuration
- { cfgPort             :: Int               -- ^ Port to listen on
- , cfgPriority         :: Priority          -- ^ Debug level
- , cfgGithubSecret     :: Maybe ByteString  -- ^ Shared secret for the incoming GitHub webhook calls
- , cfgMattermostUrl    :: Text              -- ^ Mattermost base URL
- , cfgMattermostPort   :: Int               -- ^ Mattermost port, usuall 443
- , cfgMattermostApiKey :: Text              -- ^ Mattermost API key - the last part of the incoming webhook URL
+ { cfgPort              :: Int               -- ^ Port to listen on
+ , cfgPriority          :: Priority          -- ^ Debug level
+ , cfgGithubSecret      :: Maybe ByteString  -- ^ Shared secret for the incoming GitHub webhook calls
+ , cfgMattermostUrl     :: Text              -- ^ Mattermost base URL
+ , cfgMattermostPort    :: Int               -- ^ Mattermost port, usuall 443
+ , cfgMattermostApiKey  :: Text              -- ^ Mattermost API key - the last part of the incoming webhook URL
+ , cfgMattermostChannel :: Maybe Text        -- ^ Mattermost channel send messages to
  }
 
  -- ----------------------------------------------

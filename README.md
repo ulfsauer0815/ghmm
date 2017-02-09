@@ -75,6 +75,7 @@ self-explanatory.
 | `MATTERMOST_URL`     | URL where Mattermost is available                     |
 | `MATTERMOST_PORT`    | Port on which Mattermost is available (default: `443`)|
 | `MATTERMOST_API_KEY` | Value at the end of the incoming webhook url          |
+| `MATTERMOST_CHANNEL` | Channel to post the messages to                       |
 
 See `config/dev.example` for how this might look like.
 

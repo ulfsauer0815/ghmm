@@ -5,6 +5,7 @@
 module Mattermost.Github.Message
     ( renderMessage
     , renderMessage'
+    , messageTemplate
     ) where
 
 import           Data.Maybe

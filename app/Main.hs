@@ -57,6 +57,7 @@ readConfig =
     <*> env           "MATTERMOST_URL"
     <*> envRead       "MATTERMOST_PORT"      `withDef` 443
     <*> env           "MATTERMOST_API_KEY"
+    <*> env     `opt` "MATTERMOST_CHANNEL"   `withDef` Nothing
 
 
 -- | Initialize the loggers with the log level.

@@ -4,6 +4,7 @@ export GITHUB_SECRET="YourGitHubSignatureSecretKey"
 export MATTERMOST_URL="mattermost.hostname.com"
 export MATTERMOST_PORT="443"
 export MATTERMOST_API_KEY="abcdefghijklmnopqrstuvwxyz"
+#export MATTERMOST_CHANNEL="test"
 
 
 # only used in *-hook.sh scripts

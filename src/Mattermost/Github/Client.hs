@@ -35,8 +35,10 @@ postEvent e = do
   mmUrl             <- cfg cfgMattermostUrl
   mmPort            <- cfg cfgMattermostPort
   mmApiKey          <- cfg cfgMattermostApiKey
+  mmChannel         <- cfg cfgMattermostChannel
   httpClientManager <- asks ctxHttpClientManager
   res <- liftIO $ do
+    let message = renderMessage' messageTemplate{ mptChannel = mmChannel } . evtPayload $ e
     debugM $ "Posting message to mattermost: " <> show message
     runExceptT $ hook mmApiKey
       message
@@ -45,9 +47,6 @@ postEvent e = do
     Left err        -> liftIO . errorM $ "Unable to post to mattermost: " <> show err
     Right NoContent -> return ()
   return NoContent
-
-  where
-  message = renderMessage . evtPayload $ e
 
 -- ----------------------------------------------
 

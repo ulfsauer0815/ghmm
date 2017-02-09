@@ -7,6 +7,7 @@ app:
     - MATTERMOST_URL
     - MATTERMOST_PORT
     - MATTERMOST_API_KEY
+    - MATTERMOST_CHANNEL
   command: /usr/local/bin/ghmm-exe
   ports:
     - "8000:8000"
