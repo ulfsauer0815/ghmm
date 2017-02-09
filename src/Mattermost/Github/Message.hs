@@ -64,12 +64,13 @@ renderMessage' message event
         in repoPrefix repository
              <> link "Push" compareUrl <> ": " <> commitsText <> (tl " on " . codeblock) branch
 
-    PullRequestEvent action _ (PullRequest number htmlUrl _state title merged) repository ->
+    PullRequestEvent action _ (PullRequest number htmlUrl _state title merged prUser) repository ->
       message
         { mptAttachments = [
             attachment
               { attPretext     = Just text
               , attText        = Just title
+              , attAuthor_name = Just $ usrLogin prUser
               , attColor       = Just color
               , attFields      = [
                   Field
@@ -127,7 +128,7 @@ renderMessage' message event
         in  repoPrefix repository
              <> link "Comment" commentHtmlUrl <> (ml . italic) optAction
 
-    PullRequestReviewEvent _action (Review rvHtmlUrl rvBody _state rvUser) (PullRequest number _ _prState title _merged) repository ->
+    PullRequestReviewEvent _action (Review rvHtmlUrl rvBody _state rvUser) (PullRequest number _ _prState title _merged _user) repository ->
       message
         { mptAttachments = [
             attachment
@@ -143,7 +144,7 @@ renderMessage' message event
         repoPrefix repository
          <> link ("Pull Request #" <> (T.pack . show) number <> " Review") rvHtmlUrl <> tl ": " title
 
-    PullRequestReviewCommentEvent action (Comment commentHtmlUrl commentBody commentUser) (PullRequest number _ _state title _merged) repository ->
+    PullRequestReviewCommentEvent action (Comment commentHtmlUrl commentBody commentUser) (PullRequest number _ _state title _merged _user) repository ->
       message
         { mptAttachments = [
             attachment

@@ -28,9 +28,9 @@ module Github.Event.Types
 import           GHC.Generics
 
 import           Data.Aeson
-import           Data.Text        (Text)
+import           Data.Text    (Text)
 
-import qualified JsonOptions      as Json
+import qualified JsonOptions  as Json
 
 -- ----------------------------------------------
 
@@ -48,9 +48,9 @@ data EventPayload
   =
     -- | A <https://developer.github.com/webhooks/#ping-event ping> event.
     PingEvent
-    { epiZen         :: Text
-    , epiHook_id     :: Int
-    , epiRepository  :: Repository
+    { epiZen        :: Text
+    , epiHook_id    :: Int
+    , epiRepository :: Repository
     }
     -- | A <https://developer.github.com/v3/activity/events/types/#pushevent push> event.
   | PushEvent
@@ -145,6 +145,7 @@ data PullRequest = PullRequest
   , purState    :: Text
   , purTitle    :: Text
   , purMerged   :: Maybe Bool
+  , purUser     :: User
   } deriving (Eq, Show, Generic)
 
 instance FromJSON PullRequest where
