@@ -7,6 +7,7 @@
 module Github.Event.Types
     ( Event(..)
     , EventPayload(..)
+    , StatusCommit(..)
     , Commit(..)
     , PushCommit(..)
     , Repository(..)
@@ -72,7 +73,7 @@ data EventPayload
     { estSha         :: Text
     , estState       :: Text
     , estDescription :: Maybe Text
-    , estCommit      :: Commit
+    , estCommit      :: StatusCommit
     , estTarget_url  :: Maybe Text
     , estRepository  :: Repository
     }
@@ -111,10 +112,20 @@ instance FromJSON PushCommit where
   parseJSON = genericParseJSON Json.parseOptions
 
 
+{-# ANN type StatusCommit ("HLint: ignore Use camelCase" :: Text) #-}
+data StatusCommit = StatusCommit
+  { scmSha      :: Text
+  , scmHtml_url :: Text
+  , scmCommit   :: Commit
+  } deriving (Eq, Show, Generic)
+
+instance FromJSON StatusCommit where
+  parseJSON = genericParseJSON Json.parseOptions
+
+
 {-# ANN type Commit ("HLint: ignore Use camelCase" :: Text) #-}
 data Commit = Commit
-  { cmtSha      :: Text
-  , cmtHtml_url :: Text
+  { cmtMessage :: Text
   } deriving (Eq, Show, Generic)
 
 instance FromJSON Commit where

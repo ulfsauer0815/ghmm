@@ -95,7 +95,7 @@ renderMessage' message event
                  | otherwise               -> "#99D4FF"
       wasJustMerged = action == "closed" && fromMaybe False merged
 
-    StatusEvent _ state description (Commit sha commitUrl) targetUrl repository ->
+    StatusEvent _ state description (StatusCommit sha commitUrl commit) targetUrl repository ->
       message
         { mptAttachments = [
             attachment
@@ -109,7 +109,7 @@ renderMessage' message event
       text =
         let htmlUrl = fromEmpty commitUrl targetUrl
         in  repoPrefix repository
-             <> link ("Status (" <> shaify sha <> ")") htmlUrl
+             <> link ("Status (" <> shaify sha <> ")") htmlUrl <> ": " <> cmtMessage commit
 
     IssueCommentEvent action (Issue _state title  _ _) (Comment commentHtmlUrl commentBody commentUser) repository ->
       message
