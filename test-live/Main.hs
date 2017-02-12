@@ -92,6 +92,7 @@ eventData =
   , ("pullrequest.json",                  "pull_request")
   -- , ("status.json",                       "status")
   , ("status_with_description.json",      "status")
+  , ("issues.json",                       "issues")
   , ("issuecomment.json",                 "issue_comment")
   , ("pullrequestreview.json",            "pull_request_review")
   , ("pullrequestreviewcomment.json",     "pull_request_review_comment")

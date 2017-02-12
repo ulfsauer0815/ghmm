@@ -17,6 +17,7 @@ are supported right now.
 - [PullRequestEvent](https://developer.github.com/v3/activity/events/types/#pullrequestevent)
 - [PullRequestReviewEvent](https://developer.github.com/v3/activity/events/types/#pullrequestreviewevent)
 - [PullRequestReviewCommentEvent](https://developer.github.com/v3/activity/events/types/#pullrequestreviewcommentevent)
+- [IssuesEvent](https://developer.github.com/v3/activity/events/types/#issuesevent)
 - [IssueCommentEvent](https://developer.github.com/v3/activity/events/types/#issuecommentevent)
 - [StatusEvent](https://developer.github.com/v3/activity/events/types/#statusevent)
 

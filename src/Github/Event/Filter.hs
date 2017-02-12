@@ -14,7 +14,8 @@ import           Github.Api
 isInterestingEvent :: Event -> Bool
 isInterestingEvent e
   =  isInterestingPR p
-  || isInterestingComment p
+  || isInterestingIssue p
+  || isInterestingIssueComment p
   || isInterestingReviewComment p
   || isInterestingStatus p
   || isPingEvent p
@@ -30,10 +31,18 @@ isInterestingPR PullRequestEvent{..}
 isInterestingPR _ = False
 
 
-isInterestingComment :: EventPayload -> Bool
-isInterestingComment IssueCommentEvent{..}
+isInterestingIssue :: EventPayload -> Bool
+isInterestingIssue IssuesEvent{..}
+  =  eisAction == "opened"
+  || eisAction == "closed"
+  || eisAction == "reopened"
+isInterestingIssue _ = False
+
+
+isInterestingIssueComment :: EventPayload -> Bool
+isInterestingIssueComment IssueCommentEvent{..}
   =  ecoAction == "created"
-isInterestingComment _ = False
+isInterestingIssueComment _ = False
 
 
 isInterestingReviewComment :: EventPayload -> Bool

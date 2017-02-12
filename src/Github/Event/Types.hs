@@ -21,6 +21,7 @@ module Github.Event.Types
     , isPushEvent
     , isPullRequestEvent
     , isStatusEvent
+    , isIssuesEvent
     , isIssueCommentEvent
     , isPullRequestReviewEvent
     , isPullRequestReviewCommentEvent
@@ -76,6 +77,12 @@ data EventPayload
     , estCommit      :: StatusCommit
     , estTarget_url  :: Maybe Text
     , estRepository  :: Repository
+    }
+    -- | A <https://developer.github.com/v3/activity/events/types/#issuesevent issues> event.
+  | IssuesEvent
+    { eisAction     :: Text
+    , eisIssue      :: Issue
+    , eisRepository :: Repository
     }
     -- | A <https://developer.github.com/v3/activity/events/types/#issuecommentevent issue_comment> event.
   | IssueCommentEvent
@@ -183,8 +190,10 @@ instance FromJSON User where
 
 {-# ANN type Issue ("HLint: ignore Use camelCase" :: Text) #-}
 data Issue = Issue
-  { issState    :: Text
+  { issNumber   :: Int
+  , issState    :: Text
   , issTitle    :: Text
+  , issBody     :: Text
   , issHtml_url :: Text
   , issUser     :: User
   -- XXX: add labels, assignee etc.
@@ -206,7 +215,7 @@ instance FromJSON Review where
 
 -- ----------------------------------------------
 
--- | If the event is a push event.
+-- | If the event is a ping event.
 isPingEvent :: EventPayload -> Bool
 isPingEvent PingEvent{} = True
 isPingEvent _           = False
@@ -225,6 +234,11 @@ isPullRequestEvent _                  = False
 isStatusEvent :: EventPayload -> Bool
 isStatusEvent StatusEvent{} = True
 isStatusEvent _             = False
+
+-- | If the event is an issues event.
+isIssuesEvent :: EventPayload -> Bool
+isIssuesEvent IssuesEvent{} = True
+isIssuesEvent _             = False
 
 -- | If the event is an issue comment event.
 isIssueCommentEvent :: EventPayload -> Bool

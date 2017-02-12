@@ -112,7 +112,34 @@ renderMessage' message event
         in  repoPrefix repository
              <> link ("Status (" <> shaify sha <> ")") htmlUrl <> ": " <> cmtMessage commit
 
-    IssueCommentEvent action (Issue _state title  _ _) (Comment commentHtmlUrl commentBody commentUser) repository ->
+    IssuesEvent action (Issue number _state title body htmlUrl user) repository ->
+      message
+        { mptAttachments = [
+            attachment
+              { attPretext     = Just text
+              , attText        = Just body
+              , attAuthor_name = Just $ usrLogin user
+              , attColor       = Just "#CC317C"
+              , attFields      = [
+                  Field
+                    { fldShort = True
+                    , fldTitle = Just "Action"
+                    , fldValue = Just action
+                    }
+                ]
+              }
+          ]
+        }
+      where
+      text =
+        repoPrefix repository
+          <> link ("Issue #" <> (T.pack . show) number) htmlUrl <> tl ": " title
+      color = if |    action == "opened"
+                   || action == "reopened" -> "#CC317C"
+                 | action == "closed"      -> "#6E5494"
+                 | otherwise               -> "#CC7AA2"
+
+    IssueCommentEvent action (Issue _number _state title _ _ _) (Comment commentHtmlUrl commentBody commentUser) repository ->
       message
         { mptAttachments = [
             attachment

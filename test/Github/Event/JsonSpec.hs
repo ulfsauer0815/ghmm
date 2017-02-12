@@ -44,6 +44,10 @@ spec =
       event <- loadAndCheckEvent "status_with_description.json" "status"
       event `shouldSatisfy` isStatusEvent
 
+    it "decodes \"issues\" event" $ do
+      event <- loadAndCheckEvent "issues.json" "issues"
+      event `shouldSatisfy` isIssuesEvent
+
     it "decodes \"issue_comment\" event" $ do
       event <- loadAndCheckEvent "issuecomment.json" "issue_comment"
       event `shouldSatisfy` isIssueCommentEvent

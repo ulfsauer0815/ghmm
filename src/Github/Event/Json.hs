@@ -30,6 +30,7 @@ headerToConstructor = flip M.lookup mapping
     , ("push",                        "PushEvent")
     , ("pull_request",                "PullRequestEvent")
     , ("status",                      "StatusEvent")
+    , ("issues",                      "IssuesEvent")
     , ("issue_comment",               "IssueCommentEvent")
     , ("pull_request_review",         "PullRequestReviewEvent")
     , ("pull_request_review_comment", "PullRequestReviewCommentEvent")
