@@ -16,6 +16,7 @@ isInterestingEvent e
   =  isInterestingPR p
   || isInterestingIssue p
   || isInterestingIssueComment p
+  || isInterestingReview p
   || isInterestingReviewComment p
   || isInterestingStatus p
   || isPingEvent p
@@ -43,6 +44,12 @@ isInterestingIssueComment :: EventPayload -> Bool
 isInterestingIssueComment IssueCommentEvent{..}
   =  ecoAction == "created"
 isInterestingIssueComment _ = False
+
+
+isInterestingReview :: EventPayload -> Bool
+isInterestingReview PullRequestReviewEvent{..}
+  = True
+isInterestingReview _ = False
 
 
 isInterestingReviewComment :: EventPayload -> Bool

@@ -15,6 +15,7 @@ import           Data.Either
 import           Data.Maybe
 import           Data.Text                 (Text)
 
+import           Github.Event.Filter
 import           Github.Event.Json
 import           Github.Event.Types
 
@@ -30,39 +31,46 @@ spec =
   describe "Github.Event.Json.decodeEvent" $ do
     it "decodes \"push\" event" $ do
       event <- loadAndCheckEvent "push.json" "push"
-      event `shouldSatisfy` isPushEvent
+      evtPayload event `shouldSatisfy` isPushEvent
 
     it "decodes \"pull_request\" event" $ do
       event <- loadAndCheckEvent "pullrequest.json" "pull_request"
-      event `shouldSatisfy` isPullRequestEvent
+      evtPayload event `shouldSatisfy` isPullRequestEvent
+      event            `shouldSatisfy` isInterestingEvent
 
     it "decodes \"status\" event" $ do
       event <- loadAndCheckEvent "status.json" "status"
-      event `shouldSatisfy` isStatusEvent
+      evtPayload event `shouldSatisfy` isStatusEvent
+      event            `shouldSatisfy` isInterestingEvent
 
     it "decodes \"status\" event with description" $ do
       event <- loadAndCheckEvent "status_with_description.json" "status"
-      event `shouldSatisfy` isStatusEvent
+      evtPayload event `shouldSatisfy` isStatusEvent
+      event            `shouldSatisfy` isInterestingEvent
 
     it "decodes \"issues\" event" $ do
       event <- loadAndCheckEvent "issues.json" "issues"
-      event `shouldSatisfy` isIssuesEvent
+      evtPayload event `shouldSatisfy` isIssuesEvent
+      event            `shouldSatisfy` isInterestingEvent
 
     it "decodes \"issue_comment\" event" $ do
       event <- loadAndCheckEvent "issuecomment.json" "issue_comment"
-      event `shouldSatisfy` isIssueCommentEvent
+      evtPayload event `shouldSatisfy` isIssueCommentEvent
+      event            `shouldSatisfy` isInterestingEvent
 
     it "decodes \"pull_request_review\" event" $ do
       event <- loadAndCheckEvent "pullrequestreview.json" "pull_request_review"
-      event `shouldSatisfy` isPullRequestReviewEvent
+      evtPayload event `shouldSatisfy` isPullRequestReviewEvent
+      event            `shouldSatisfy` isInterestingEvent
 
     it "decodes \"pull_request_review_comment\" event" $ do
       event <- loadAndCheckEvent "pullrequestreviewcomment.json" "pull_request_review_comment"
-      event `shouldSatisfy` isPullRequestReviewCommentEvent
+      evtPayload event `shouldSatisfy` isPullRequestReviewCommentEvent
+      event            `shouldSatisfy` isInterestingEvent
 
 -- ----------------------------------------------
 
-loadAndCheckEvent :: String -> Text -> IO EventPayload
+loadAndCheckEvent :: String -> Text -> IO Event
 loadAndCheckEvent file header = do
   json <- loadFile file
   let valueMb = decode json :: Maybe Value
@@ -70,7 +78,7 @@ loadAndCheckEvent file header = do
   let value = fromJust valueMb
   let eventEt = decodeEvent header value :: Either String EventPayload
   eventEt `shouldSatisfy` isRight
-  return $ fromRight eventEt
+  return $ Event (fromRight eventEt) header "delivery-id"
 
 loadFile :: String -> IO ByteString
 loadFile relPath = BL.readFile $ "test/data/event/" ++ relPath
