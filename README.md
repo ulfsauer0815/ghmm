@@ -1,6 +1,7 @@
 # ghmm
 
 [![Build Status](https://travis-ci.org/UlfS/ghmm.svg?branch=master)](https://travis-ci.org/UlfS/ghmm)
+[![Docker](https://img.shields.io/docker/automated/ulfs/ghmm.svg)](https://hub.docker.com/r/ulfs/ghmm)
 
 A GitHub event bot for Mattermost.
 
