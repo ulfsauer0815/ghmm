@@ -58,7 +58,7 @@ data EventPayload
   | PushEvent
     { epuRef         :: Text
     , epuCommits     :: [PushCommit]
-    , epuHead_commit :: PushCommit
+    , epuHead_commit :: Maybe PushCommit
     , epuCompare     :: Text
     , epuRepository  :: Repository
     }

@@ -34,6 +34,11 @@ spec =
       evtPayload event `shouldSatisfy` isPushEvent
       event            `shouldNotSatisfy` isInterestingEvent
 
+    it "decodes \"push\" event with null values" $ do
+      event <- loadAndCheckEvent "push_null.json" "push"
+      evtPayload event `shouldSatisfy` isPushEvent
+      event            `shouldNotSatisfy` isInterestingEvent
+
     it "decodes \"pull_request\" event" $ do
       event <- loadAndCheckEvent "pullrequest.json" "pull_request"
       evtPayload event `shouldSatisfy` isPullRequestEvent
