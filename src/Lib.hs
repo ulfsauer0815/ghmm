@@ -88,9 +88,9 @@ eventHandler' deliveryId eventType jsonEvent = do
       liftIO . debugM $ "Parsed GitHub event: " <> show event
       handleEvent event
     Left msg -> do
-      liftIO . warningM $
-        "Unable to parse GitHub event type \""
-          <> show eventType <> "\": "
+      liftIO . errorM $
+        "Unable to parse GitHub event type "
+          <> show eventType <> ": "
           <> msg
       return NoContent
 
@@ -115,3 +115,6 @@ warningM = Log.warningM modName
 
 debugM :: String -> IO ()
 debugM = Log.debugM modName
+
+errorM :: String -> IO ()
+errorM = Log.errorM modName
