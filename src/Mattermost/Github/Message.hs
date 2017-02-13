@@ -57,7 +57,7 @@ renderMessage' message event
           ]
         }
       where
-      commitsList = uln . itemize . map pcmMessage $ commits
+      commitsList = uln . itemize . map (firstLine . pcmMessage) $ commits
       text =
         let commitsText = (T.pack . show $ commitsLength) <> " commit" <> if commitsLength == 1 then "" else "s"
             commitsLength = length commits
@@ -110,7 +110,7 @@ renderMessage' message event
       text =
         let htmlUrl = fromEmpty commitUrl targetUrl
         in  repoPrefix repository
-             <> link ("Status (" <> shaify sha <> ")") htmlUrl <> ": " <> cmtMessage commit
+             <> link ("Status (" <> shaify sha <> ")") htmlUrl <> ": " <> (firstLine . cmtMessage) commit
 
     IssuesEvent action (Issue number _state title body htmlUrl user) repository ->
       message
