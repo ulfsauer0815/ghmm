@@ -28,6 +28,15 @@ lint:
 	find . -type f -iname '*.hs' -print0 | xargs -0 hlint
 
 
+.PHONY: docker-build
+docker-build: build test
+	stack image container
+
+.PHONY: docker-push
+docker-push: docker-build
+	docker push ulfs/ghmm:latest
+
+
 $(PING_URL_FILE):
 	. ./cfg/dev && \
 	[ -f $(PING_URL_FILE) ] && echo "$(PING_URL_FILE) still exists?!" && exit 1 ;\
