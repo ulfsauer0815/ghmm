@@ -13,7 +13,8 @@ import           Github.Api
 -- | If an 'Event' is interesting enough to be considered for publication.
 isInterestingEvent :: Event -> Bool
 isInterestingEvent e
-  =  isInterestingPR p
+  =  isInterestingPush p
+  || isInterestingPR p
   || isInterestingIssue p
   || isInterestingIssueComment p
   || isInterestingReview p
@@ -21,6 +22,12 @@ isInterestingEvent e
   || isInterestingStatus p
   || isPingEvent p
   where p = evtPayload e
+
+
+isInterestingPush :: EventPayload -> Bool
+isInterestingPush PushEvent{..}
+  = True
+isInterestingPush _ = False
 
 
 isInterestingPR :: EventPayload -> Bool

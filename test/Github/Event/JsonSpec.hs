@@ -32,12 +32,12 @@ spec =
     it "decodes \"push\" event" $ do
       event <- loadAndCheckEvent "push.json" "push"
       evtPayload event `shouldSatisfy` isPushEvent
-      event            `shouldNotSatisfy` isInterestingEvent
+      event            `shouldSatisfy` isInterestingEvent
 
     it "decodes \"push\" event with null values" $ do
       event <- loadAndCheckEvent "push_null.json" "push"
       evtPayload event `shouldSatisfy` isPushEvent
-      event            `shouldNotSatisfy` isInterestingEvent
+      event            `shouldSatisfy` isInterestingEvent
 
     it "decodes \"pull_request\" event" $ do
       event <- loadAndCheckEvent "pullrequest.json" "pull_request"
