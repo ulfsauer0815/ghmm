@@ -3,18 +3,17 @@
 
 module Main where
 
-import           Network.HTTP.Client        (Manager, newManager)
-import           Network.HTTP.Client.TLS    (tlsManagerSettings)
+import           Network.HTTP.Client       (Manager, newManager)
+import           Network.HTTP.Client.TLS   (tlsManagerSettings)
 
 import           Control.Monad
-import           Control.Monad.Trans.Except (runExceptT)
 
 import           Data.Aeson
-import           Data.ByteString.Lazy       (ByteString)
-import qualified Data.ByteString.Lazy       as BL
+import           Data.ByteString.Lazy      (ByteString)
+import qualified Data.ByteString.Lazy      as BL
 import           Data.Either
-import           Data.Text                  (Text)
-import qualified Data.Text                  as T
+import           Data.Text                 (Text)
+import qualified Data.Text                 as T
 
 import           Servant.Client
 
@@ -50,9 +49,9 @@ main = do
 
 sendEvent :: Manager -> Configuration -> EventPayload -> IO ()
 sendEvent clientManager Configuration{..} event = do
-  result <- runExceptT $ hook cfgMattermostApiKey
-    (renderMessage' testMessageTemplate event)
-    clientManager (BaseUrl Https (T.unpack cfgMattermostUrl) cfgMattermostPort "")
+  let clientEnv = ClientEnv clientManager (BaseUrl Https (T.unpack cfgMattermostUrl) cfgMattermostPort "")
+  let message   = renderMessage' testMessageTemplate event
+  result <- runClientM (hook cfgMattermostApiKey message) clientEnv
   when (isLeft result) $ print result
   where
   testMessageTemplate = MessagePayload

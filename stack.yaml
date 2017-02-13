@@ -3,7 +3,7 @@ extra-package-dbs: []
 packages:
 - '.'
 extra-deps:
-resolver: lts-7.19
+resolver: lts-8.0
 image:
   container:
     name: ulfs/ghmm

@@ -10,12 +10,11 @@ module Mattermost.Github.Client
     ) where
 
 import           Control.Monad.Reader
-import           Control.Monad.Trans.Except (runExceptT)
 
 import           Data.Monoid
-import qualified Data.Text                  as T
+import qualified Data.Text                 as T
 
-import qualified System.Log.Logger          as Log
+import qualified System.Log.Logger         as Log
 
 import           Servant
 import           Servant.Client
@@ -37,12 +36,11 @@ postEvent e = do
   mmApiKey          <- cfg cfgMattermostApiKey
   mmChannel         <- cfg cfgMattermostChannel
   httpClientManager <- asks ctxHttpClientManager
+  let clientEnv = ClientEnv httpClientManager (BaseUrl Https (T.unpack mmUrl) mmPort "")
   res <- liftIO $ do
     let message = renderMessage' messageTemplate{ mptChannel = mmChannel } . evtPayload $ e
     debugM $ "Posting message to mattermost: " <> show message
-    runExceptT $ hook mmApiKey
-      message
-      httpClientManager (BaseUrl Https (T.unpack mmUrl) mmPort "") -- TODO: hardcoded https?
+    runClientM (hook mmApiKey message) clientEnv
   case res of
     Left err        -> liftIO . errorM $ "Unable to post to mattermost: " <> show err
     Right NoContent -> return ()

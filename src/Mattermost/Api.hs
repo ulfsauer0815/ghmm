@@ -13,7 +13,7 @@ module Mattermost.Api
     , api
     ) where
 
-import           Data.Text                  (Text)
+import           Data.Text        (Text)
 
 import           Servant
 import           Servant.Client
@@ -31,7 +31,7 @@ type Api =
 api :: Proxy Api
 api = Proxy
 
--- hook :: Text -> MessagePayload -> Manager -> BaseUrl-> ClientM NoContent
+--hook :: Text -> MessagePayload -> ClientM NoContent
 -- | Client for the Mattermost API.
 hook :: Client Api
 hook = client api
