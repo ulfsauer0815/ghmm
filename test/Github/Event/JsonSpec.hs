@@ -34,6 +34,11 @@ spec =
       evtPayload event `shouldSatisfy` isPushEvent
       event            `shouldSatisfy` isInterestingEvent
 
+    it "decodes \"push\" event by GitHub and is boring" $ do
+      event <- loadAndCheckEvent "push_pr_merge.json" "push"
+      evtPayload event `shouldSatisfy` isPushEvent
+      event            `shouldNotSatisfy` isInterestingEvent
+
     it "decodes \"push\" event with null values" $ do
       event <- loadAndCheckEvent "push_null.json" "push"
       evtPayload event `shouldSatisfy` isPushEvent

@@ -25,8 +25,10 @@ isInterestingEvent e
 
 
 isInterestingPush :: EventPayload -> Bool
-isInterestingPush PushEvent{..}
-  = True
+-- ignore pushes that are the result of a GitHub PR merge using the web interface
+isInterestingPush (PushEvent _ _ (Just (PushCommit _ _ (Committer email username _))) _ _)
+  = not (email == "noreply@github.com" && username == "web-flow")
+isInterestingPush PushEvent{} = True
 isInterestingPush _ = False
 
 

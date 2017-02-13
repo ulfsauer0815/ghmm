@@ -11,6 +11,7 @@ module Github.Event.Types
     , Commit(..)
     , PushCommit(..)
     , Repository(..)
+    , Committer(..)
     , PullRequest(..)
     , Issue(..)
     , Comment(..)
@@ -111,8 +112,9 @@ instance FromJSON EventPayload where
 
 
 data PushCommit = PushCommit
-  { pcmId      :: Text
-  , pcmMessage :: Text
+  { pcmId        :: Text
+  , pcmMessage   :: Text
+  , pcmCommitter :: Committer
   } deriving (Eq, Show, Generic)
 
 instance FromJSON PushCommit where
@@ -155,6 +157,17 @@ data Pusher = Pusher
   } deriving (Eq, Show, Generic)
 
 instance ToJSON Pusher
+
+
+data Committer = Committer
+  { citEmail    :: Text
+  , citUsername :: Text
+  , citName     :: Text
+  } deriving (Eq, Show, Generic)
+
+instance FromJSON Committer where
+  parseJSON = genericParseJSON Json.parseOptions
+
 
 {-# ANN type PullRequest ("HLint: ignore Use camelCase" :: Text) #-}
 data PullRequest = PullRequest
