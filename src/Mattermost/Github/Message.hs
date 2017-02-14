@@ -10,9 +10,10 @@ module Mattermost.Github.Message
 
 import           Data.Maybe
 import           Data.Monoid
-import qualified Data.Text        as T
+import qualified Data.Text              as T
 
 import           Github.Api
+import           Github.Event.Predicate
 import           Mattermost.Types
 import           Message.Markdown
 
@@ -112,7 +113,7 @@ renderMessage' message event
         in  repoPrefix repository
              <> link ("Status (" <> shaify sha <> ")") htmlUrl <> ": " <> (firstLine . cmtMessage) commit
 
-    IssuesEvent action (Issue number _state title body htmlUrl user) repository ->
+    IssuesEvent action (Issue number _state title body htmlUrl user _) repository ->
       message
         { mptAttachments = [
             attachment
@@ -139,14 +140,14 @@ renderMessage' message event
                  | action == "closed"      -> "#6E5494"
                  | otherwise               -> "#CC7AA2"
 
-    IssueCommentEvent action (Issue _number _state title _ _ _) (Comment commentHtmlUrl commentBody commentUser) repository ->
+    IssueCommentEvent action (Issue _number _state title _ _ _ _) (Comment commentHtmlUrl commentBody commentUser _) repository ->
       message
         { mptAttachments = [
             attachment
               { attPretext     = Just text
               , attText        = Just $ commentify commentBody
               , attAuthor_name = Just $ usrLogin commentUser
-              , attColor       = Just "#FFD9B3"
+              , attColor       = Just color
               }
           ]
         }
@@ -155,6 +156,8 @@ renderMessage' message event
         let optAction = if action == "created" then "" else action
         in  repoPrefix repository
              <> link "Comment" commentHtmlUrl <> (ml . italic) optAction <> tl ": " title
+      color = if | isClosingIssueComment event -> "#6E5494"
+                 | otherwise                   -> "#FFD9B3"
 
     PullRequestReviewEvent _action (Review rvHtmlUrl rvBody _state rvUser) (PullRequest number _ _prState title _merged _user) repository ->
       message
@@ -172,7 +175,7 @@ renderMessage' message event
         repoPrefix repository
          <> link ("Pull Request #" <> (T.pack . show) number <> " Review") rvHtmlUrl <> tl ": " title
 
-    PullRequestReviewCommentEvent action (Comment commentHtmlUrl commentBody commentUser) (PullRequest number _ _state title _merged _user) repository ->
+    PullRequestReviewCommentEvent action (Comment commentHtmlUrl commentBody commentUser _) (PullRequest number _ _state title _merged _user) repository ->
       message
         { mptAttachments = [
             attachment

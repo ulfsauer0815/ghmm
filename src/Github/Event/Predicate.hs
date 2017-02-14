@@ -1,9 +1,12 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
 
--- | GitHub event filter functions.
-module Github.Event.Filter
+-- | GitHub event predicates.
+--   Mostly for filtering events.
+module Github.Event.Predicate
   ( isInterestingEvent
+
+  , isClosingIssueComment
   ) where
 
 import           Github.Api
@@ -71,3 +74,10 @@ isInterestingStatus :: EventPayload -> Bool
 isInterestingStatus StatusEvent{..}
   =  estState /= "pending"
 isInterestingStatus _ = False
+
+
+-- | If an event is the accompanying comment to the closing of an issue.
+isClosingIssueComment :: EventPayload -> Bool
+isClosingIssueComment IssueCommentEvent{..}
+  =  issClosed_at ecoIssue == Just (comCreated_at ecoComment)
+isClosingIssueComment _ = False

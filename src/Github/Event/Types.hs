@@ -184,9 +184,10 @@ instance FromJSON PullRequest where
 
 {-# ANN type Comment ("HLint: ignore Use camelCase" :: Text) #-}
 data Comment = Comment
-  { comHtml_url :: Text
-  , comBody     :: Text
-  , comUser     :: User
+  { comHtml_url   :: Text
+  , comBody       :: Text
+  , comUser       :: User
+  , comCreated_at :: Text
   } deriving (Eq, Show, Generic)
 
 instance FromJSON Comment where
@@ -203,12 +204,13 @@ instance FromJSON User where
 
 {-# ANN type Issue ("HLint: ignore Use camelCase" :: Text) #-}
 data Issue = Issue
-  { issNumber   :: Int
-  , issState    :: Text
-  , issTitle    :: Text
-  , issBody     :: Text
-  , issHtml_url :: Text
-  , issUser     :: User
+  { issNumber    :: Int
+  , issState     :: Text
+  , issTitle     :: Text
+  , issBody      :: Text
+  , issHtml_url  :: Text
+  , issUser      :: User
+  , issClosed_at :: Maybe Text
   -- XXX: add labels, assignee etc.
   } deriving (Eq, Show, Generic)
 

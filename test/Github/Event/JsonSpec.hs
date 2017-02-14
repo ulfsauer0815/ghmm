@@ -15,8 +15,8 @@ import           Data.Either
 import           Data.Maybe
 import           Data.Text                 (Text)
 
-import           Github.Event.Filter
 import           Github.Event.Json
+import           Github.Event.Predicate
 import           Github.Event.Types
 
 import           Util
@@ -66,8 +66,15 @@ spec =
 
     it "decodes \"issue_comment\" event" $ do
       event <- loadAndCheckEvent "issuecomment.json" "issue_comment"
+      evtPayload event `shouldSatisfy`    isIssueCommentEvent
+      event            `shouldSatisfy`    isInterestingEvent
+      evtPayload event `shouldNotSatisfy` isClosingIssueComment
+
+    it "decodes \"issue_comment\" event which closes an issue" $ do
+      event <- loadAndCheckEvent "issuecomment_closing.json" "issue_comment"
       evtPayload event `shouldSatisfy` isIssueCommentEvent
       event            `shouldSatisfy` isInterestingEvent
+      evtPayload event `shouldSatisfy` isClosingIssueComment
 
     it "decodes \"pull_request_review\" event" $ do
       event <- loadAndCheckEvent "pullrequestreview.json" "pull_request_review"

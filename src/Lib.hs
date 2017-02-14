@@ -27,8 +27,8 @@ import           Servant
 
 import           App
 import           Github.Api                 as Github
-import           Github.Event.Filter
 import           Github.Event.Json
+import           Github.Event.Predicate
 import           Mattermost.Github.Client
 
 -- ----------------------------------------------
