@@ -55,9 +55,13 @@ italic = ta "*"
 bold :: Stringish m => m -> m
 bold = italic . italic
 
--- | Block quotes
-blockquote :: Stringish m => m -> m
-blockquote = tl "> "
+-- | Block quotes for multiline text.
+blockquote :: Text -> Text
+blockquote = uln . map singleBlockquote . ln
+  where
+  -- | Simple block quotes
+  singleBlockquote :: Stringish m => m -> m
+  singleBlockquote = tl "> "
 
 -- | List of items.
 itemize :: Stringish m => [m] -> [m]

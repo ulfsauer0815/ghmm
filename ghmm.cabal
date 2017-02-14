@@ -106,6 +106,7 @@ test-suite ghmm-test
   hs-source-dirs:      test
   main-is:             Spec.hs
   other-modules:       Github.Event.JsonSpec
+                     , Message.MarkdownSpec
                      , Message.UtilSpec
   build-depends:       base
                      , ghmm
