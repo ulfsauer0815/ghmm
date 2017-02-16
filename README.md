@@ -75,7 +75,6 @@ self-explanatory.
 | `LOG_LEVEL`          | Log level (default: `ERROR`)\*                        |
 | `GITHUB_SECRET`      | Secret you share between GitHub and ghmm (optional)   |
 | `MATTERMOST_URL`     | URL where Mattermost is available                     |
-| `MATTERMOST_PORT`    | Port on which Mattermost is available (default: `443`)|
 | `MATTERMOST_API_KEY` | Value at the end of the incoming webhook url          |
 | `MATTERMOST_CHANNEL` | Channel to post the messages to                       |
 

@@ -10,6 +10,8 @@ import           System.Log.Logger                    hiding (debugM, errorM,
                                                        warningM)
 import qualified System.Log.Logger                    as Log
 
+import           Data.Text                            (Text)
+
 import           Network.Wai.Handler.Warp             (run)
 import           Network.Wai.Middleware.RequestLogger
 
@@ -54,10 +56,12 @@ readConfig =
     <$> envRead       "PORT"                 `withDef` 8000
     <*> envRead       "LOG_LEVEL"            `withDef` Log.ERROR
     <*> envBS   `opt` "GITHUB_SECRET"        `withDef` Nothing
-    <*> env           "MATTERMOST_URL"
-    <*> envRead       "MATTERMOST_PORT"      `withDef` 443
+    <*> envUrl        "MATTERMOST_URL"
     <*> env           "MATTERMOST_API_KEY"
     <*> env     `opt` "MATTERMOST_CHANNEL"   `withDef` Nothing
+    where
+    envUrl :: Text -> ConfigReader BaseUrl
+    envUrl = env' parseBaseUrl
 
 
 -- | Initialize the loggers with the log level.

@@ -13,7 +13,6 @@ import           Data.ByteString.Lazy      (ByteString)
 import qualified Data.ByteString.Lazy      as BL
 import           Data.Either
 import           Data.Text                 (Text)
-import qualified Data.Text                 as T
 
 import           Servant.Client
 
@@ -26,8 +25,7 @@ import           Mattermost.Github.Message
 -- ----------------------------------------------
 
 data Configuration = Configuration
-  { cfgMattermostUrl     :: Text
-  , cfgMattermostPort    :: Int
+  { cfgMattermostUrl     :: BaseUrl
   , cfgMattermostApiKey  :: Text
   , cfgMattermostChannel :: Text
   }
@@ -49,7 +47,7 @@ main = do
 
 sendEvent :: Manager -> Configuration -> EventPayload -> IO ()
 sendEvent clientManager Configuration{..} event = do
-  let clientEnv = ClientEnv clientManager (BaseUrl Https (T.unpack cfgMattermostUrl) cfgMattermostPort "")
+  let clientEnv = ClientEnv clientManager cfgMattermostUrl
   let message   = renderMessage' testMessageTemplate event
   result <- runClientM (hook cfgMattermostApiKey message) clientEnv
   when (isLeft result) $ print result
@@ -78,11 +76,12 @@ loadFile relPath = BL.readFile $ "test/data/event/" ++ relPath
 readConfig :: ConfigReader Configuration
 readConfig =
   Configuration
-    <$> env           "MATTERMOST_URL"
-    <*> envRead       "MATTERMOST_PORT"         `withDef` 443
+    <$> envUrl        "MATTERMOST_URL"
     <*> env           "MATTERMOST_API_KEY"
     <*> env           "TEST_MATTERMOST_CHANNEL"
-
+  where
+  envUrl :: Text -> ConfigReader BaseUrl
+  envUrl = env' parseBaseUrl
 -- ----------------------------------------------
 
 eventData :: [(String, Text)]

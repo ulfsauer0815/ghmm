@@ -2,7 +2,18 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 -- | The app, it's runtime context and configuration.
-module App where
+module App
+  ( App(..)
+  , AppContext(..)
+  , Configuration(..)
+
+  , cfg
+  
+  -- * Reexports from Servant.Client
+  , BaseUrl
+  , parseBaseUrl
+  , showBaseUrl
+  ) where
 
 import           Control.Monad.Except (ExceptT, MonadError)
 import           Control.Monad.Reader (MonadIO, MonadReader, ReaderT, asks)
@@ -15,6 +26,7 @@ import           Data.Text            (Text)
 import qualified Network.HTTP.Client  as HttpClient
 
 import           Servant
+import           Servant.Client
 
 -- ----------------------------------------------
 
@@ -35,8 +47,7 @@ data Configuration = Configuration
  { cfgPort              :: Int               -- ^ Port to listen on
  , cfgPriority          :: Priority          -- ^ Debug level
  , cfgGithubSecret      :: Maybe ByteString  -- ^ Shared secret for the incoming GitHub webhook calls
- , cfgMattermostUrl     :: Text              -- ^ Mattermost base URL
- , cfgMattermostPort    :: Int               -- ^ Mattermost port, usuall 443
+ , cfgMattermostUrl     :: BaseUrl           -- ^ Mattermost base URL
  , cfgMattermostApiKey  :: Text              -- ^ Mattermost API key - the last part of the incoming webhook URL
  , cfgMattermostChannel :: Maybe Text        -- ^ Mattermost channel send messages to
  }

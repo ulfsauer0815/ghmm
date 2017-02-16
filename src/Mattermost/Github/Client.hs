@@ -12,7 +12,6 @@ module Mattermost.Github.Client
 import           Control.Monad.Reader
 
 import           Data.Monoid
-import qualified Data.Text                 as T
 
 import qualified System.Log.Logger         as Log
 
@@ -32,11 +31,10 @@ import           Mattermost.Github.Message
 postEvent :: Event -> App NoContent
 postEvent e = do
   mmUrl             <- cfg cfgMattermostUrl
-  mmPort            <- cfg cfgMattermostPort
   mmApiKey          <- cfg cfgMattermostApiKey
   mmChannel         <- cfg cfgMattermostChannel
   httpClientManager <- asks ctxHttpClientManager
-  let clientEnv = ClientEnv httpClientManager (BaseUrl Https (T.unpack mmUrl) mmPort "")
+  let clientEnv = ClientEnv httpClientManager mmUrl
   res <- liftIO $ do
     let message = renderMessage' messageTemplate{ mptChannel = mmChannel } . evtPayload $ e
     debugM $ "Posting message to mattermost: " <> show message

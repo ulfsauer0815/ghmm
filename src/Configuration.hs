@@ -7,6 +7,7 @@ module Configuration
   , runConfigReader
 
   , env
+  , env'
   , read
   , envRead
   , envBS
