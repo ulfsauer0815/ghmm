@@ -118,6 +118,7 @@ Create an app using mfine's buildpack for haskell.
 
 ```sh
 heroku create --buildpack https://github.com/UlfS/heroku-buildpack-stack.git your-app-name
+git push heroku master
 ```
 
 #### Configure the environment
