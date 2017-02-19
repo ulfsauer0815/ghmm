@@ -108,6 +108,39 @@ stack image container   # creates a docker image 'ulfs/ghmm'
 docker-compose up -d    # starts the app on port 8000
 ```
 
+### Deploy on Heroku
+
+You need an Heroku account and have the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) installed.
+
+#### Create the app
+
+Create an app using mfine's buildpack for haskell.
+
+```sh
+heroku create --buildpack https://github.com/UlfS/heroku-buildpack-stack.git your-app-name
+```
+
+#### Configure the environment
+
+Set the necessary environment variables.
+`PORT` does not need to be set - it will be set by Heroku.
+
+```sh
+heroku config:set MATTERMOST_URL=your.mattermost.server.com
+heroku config:set MATTERMOST_API_KEY=your-mattermost-api-key-here
+```
+
+#### Create a web dyno
+
+To deploy the app you need at leat one web dyno.
+
+```sh
+heroku scale web=1
+```
+
+The app should now be available at https://your-app-name.herokuapp.com/.
+
+
 ### Local Deployment
 
 If you want to test it locally, you can use tunneling services such as
