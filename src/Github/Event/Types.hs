@@ -171,12 +171,13 @@ instance FromJSON Committer where
 
 {-# ANN type PullRequest ("HLint: ignore Use camelCase" :: Text) #-}
 data PullRequest = PullRequest
-  { purNumber   :: Int
-  , purHtml_url :: Text
-  , purState    :: Text
-  , purTitle    :: Text
-  , purMerged   :: Maybe Bool
-  , purUser     :: User
+  { purNumber    :: Int
+  , purHtml_url  :: Text
+  , purState     :: Text
+  , purTitle     :: Text
+  , purMerged    :: Maybe Bool
+  , purMerged_by :: Maybe User
+  , purUser      :: User
   } deriving (Eq, Show, Generic)
 
 instance FromJSON PullRequest where

@@ -49,6 +49,14 @@ spec =
       evtPayload event `shouldSatisfy` isPullRequestEvent
       event            `shouldSatisfy` isInterestingEvent
 
+    it "decodes \"pull_request\" event of a merge" $ do
+      event <- loadAndCheckEvent "pullrequest_merge.json" "pull_request"
+      evtPayload event `shouldSatisfy` isPullRequestEvent
+      event            `shouldSatisfy` isInterestingEvent
+      let mergedBy = purMerged_by . eprPull_request . evtPayload $ event
+      mergedBy         `shouldSatisfy` isJust
+
+
     it "decodes \"status\" event" $ do
       event <- loadAndCheckEvent "status.json" "status"
       evtPayload event `shouldSatisfy` isStatusEvent

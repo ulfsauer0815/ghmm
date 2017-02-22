@@ -88,6 +88,7 @@ eventData :: [(String, Text)]
 eventData =
   [ ("push.json",                         "push")
   , ("pullrequest.json",                  "pull_request")
+  , ("pullrequest_merge.json",            "pull_request")
   -- , ("status.json",                       "status")
   , ("status_with_description.json",      "status")
   , ("issues.json",                       "issues")

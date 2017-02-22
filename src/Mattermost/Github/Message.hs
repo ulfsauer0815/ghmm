@@ -66,7 +66,7 @@ renderMessage' message event
         in repoPrefix repository
              <> link "Push" compareUrl <> ": " <> commitsText <> (tl " on " . codeblock) branch
 
-    PullRequestEvent action _ (PullRequest number htmlUrl _state title merged prUser) repository ->
+    PullRequestEvent action _ (PullRequest number htmlUrl _state title merged mergedBy prUser) repository ->
       message
         { mptAttachments = [
             attachment
@@ -81,6 +81,14 @@ renderMessage' message event
                     , fldValue = Just actionText
                     }
                 ]
+                <> if wasJustMerged then [
+                  Field
+                    { fldShort = True
+                    , fldTitle = Just "Merged by"
+                    , fldValue = usrLogin <$> mergedBy
+                    }
+                    ]
+                   else mempty
               }
           ]
         }
@@ -159,7 +167,7 @@ renderMessage' message event
       color = if | isClosingIssueComment event -> "#6E5494"
                  | otherwise                   -> "#FFD9B3"
 
-    PullRequestReviewEvent _action (Review rvHtmlUrl rvBody _state rvUser) (PullRequest number _ _prState title _merged _user) repository ->
+    PullRequestReviewEvent _action (Review rvHtmlUrl rvBody _state rvUser) (PullRequest number _ _prState title _merged _mergedBy _user) repository ->
       message
         { mptAttachments = [
             attachment
@@ -175,7 +183,7 @@ renderMessage' message event
         repoPrefix repository
          <> link ("Pull Request #" <> (T.pack . show) number <> " Review") rvHtmlUrl <> tl ": " title
 
-    PullRequestReviewCommentEvent action (Comment commentHtmlUrl commentBody commentUser _) (PullRequest number _ _state title _merged _user) repository ->
+    PullRequestReviewCommentEvent action (Comment commentHtmlUrl commentBody commentUser _) (PullRequest number _ _state title _merged _mergedBy _user) repository ->
       message
         { mptAttachments = [
             attachment
