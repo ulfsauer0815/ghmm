@@ -69,4 +69,5 @@ hook-ping: ping-url
 
 .PHONY: tunnel
 tunnel:
-	beame-insta-ssl tunnel $(PORT) http --fqdn $(WEBHOOK_HOST)
+	. ./cfg/dev && \
+        beame-insta-ssl tunnel $$PORT http --fqdn $$WEBHOOK_HOST
