@@ -50,9 +50,10 @@ ping-url: $(PING_URL_FILE)
 
 .PHONY: hook-create
 hook-create:
-	. ./cfg/dev && \
+	@. ./cfg/dev && \
 	[ -f $(PING_URL_FILE) ] && echo "$(PING_URL_FILE) still exists?!" && exit 1 ;\
 	[ ! -f $(PING_URL_FILE) ] && $(SCRIPTDIR)/create-hook.sh $(REPOS_FILE) $(WEBHOOK_URL) > $(PING_URL_FILE) # XXX: $2 unused atm
+
 
 .PHONY: hook-clean
 hook-clean:
@@ -70,4 +71,4 @@ hook-ping: ping-url
 .PHONY: tunnel
 tunnel:
 	. ./cfg/dev && \
-        beame-insta-ssl tunnel $$PORT http --fqdn $$WEBHOOK_HOST
+        beame-insta-ssl tunnel $$PORT http --fqdn $$BEAME_FQDN

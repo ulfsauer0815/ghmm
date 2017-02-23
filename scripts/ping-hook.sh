@@ -8,8 +8,8 @@ AUTH=${AUTH:?"AUTH is not set"}
 
 # ###############################################
 
-SUFFIX="test"
+WEBHOOK_PING_SUFFIX=${WEBHOOK_PING_SUFFIX:-"test"}
 
 http $AUTH \
   POST \
-  "$PING_URL/$SUFFIX"
+  "$PING_URL/$WEBHOOK_PING_SUFFIX"

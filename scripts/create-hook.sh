@@ -18,21 +18,25 @@ BODY="{
   \"config\": {
     \"url\": \"$WEBHOOK_URL\",
     \"content_type\": \"json\",
-    \"insecure_ssl\": \"1\",
     \"secret\": \"$GITHUB_SECRET\"
   }
 }"
 
+RETURN_CODE=0
+
 for repo in $(cat "$1");do
 
-  OUTPUT=$(http $AUTH \
+  OUTPUT=$(http --check-status $AUTH \
     POST \
     "https://api.github.com/repos/$repo/hooks" <<< "$BODY")
 
-  RETURN_CODE="$?"
+  echo bla
+
+  return_code=$?
+  [ $return_code -gt $RETURN_CODE ] && RETURN_CODE=$return_code
 
   echo "$OUTPUT" | jq -r ".url"
 
 done
 
-exit "$RETURN_CODE"
+exit $RETURN_CODE
