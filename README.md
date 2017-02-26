@@ -74,7 +74,7 @@ Note that this example configuration also includes values for the development sc
 
 ### 2.2a Deploy using the Docker
 
-The latest Docker image [UlfS/ghmm](https://hub.docker.com/ulfs/ghmm/) is available on Docker Hub.
+The latest Docker image [UlfS/ghmm](https://hub.docker.com/r/ulfs/ghmm/) is available on Docker Hub.
 
 You can easily run the app with the included docker-compose configuration.
 
