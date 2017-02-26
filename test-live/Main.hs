@@ -54,8 +54,8 @@ sendEvent clientManager Configuration{..} event = do
   where
   testMessageTemplate = MessagePayload
     { mptText        = Nothing
-    , mptUsername    = Just "GitHub Test"
-    , mptIcon_url    = Just "http://i.imgur.com/fzz0wsH.jpg"
+    , mptUsername    = Just "GitHub"
+    , mptIcon_url    = Just "http://i.imgur.com/NQA4pPs.png"
     , mptChannel     = Just cfgMattermostChannel
     , mptAttachments = []
     }
