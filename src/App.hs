@@ -8,7 +8,7 @@ module App
   , Configuration(..)
 
   , cfg
-  
+
   -- * Reexports from Servant.Client
   , BaseUrl
   , parseBaseUrl
