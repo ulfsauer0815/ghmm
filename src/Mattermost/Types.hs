@@ -20,8 +20,8 @@ import           Data.Text    (Text)
 import qualified JsonOptions  as Json
 
 -- ----------------------------------------------
-
-{-# ANN type MessagePayload ("HLint: ignore Use camelCase" :: Text) #-}
+{-# ANN module ("HLint: ignore Use camelCase" :: Text) #-}
+-- ----------------------------------------------
 
 -- | The Mattermost message payload.
 --
@@ -38,8 +38,6 @@ data MessagePayload
 instance ToJSON MessagePayload where
   toEncoding = genericToEncoding Json.encodingOptions
 
-
-{-# ANN type Attachment ("HLint: ignore Use camelCase" :: Text) #-}
 
 -- |  See <https://docs.mattermost.com/developer/message-attachments.html message attachment documentation>.
 data Attachment = Attachment
