@@ -11,4 +11,4 @@ eitherToMaybe = either (const Nothing) Just
 -- | Return the 'Right' value or crash.
 fromRight :: Either b a -> a
 fromRight (Right e) = e
-fromRight _ = error "Util.fromRight: Left value"
+fromRight _         = error "Util.fromRight: Left value"

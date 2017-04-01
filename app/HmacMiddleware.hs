@@ -130,7 +130,7 @@ getRequestBody req = do
   ichunks <- newIORef body
   let rbody = atomicModifyIORef ichunks $ \chunks ->
          case chunks of
-             [] -> ([], BS8.empty)
+             []  -> ([], BS8.empty)
              x:y -> (y, x)
   let req' = req { requestBody = rbody }
   return (req', body)
