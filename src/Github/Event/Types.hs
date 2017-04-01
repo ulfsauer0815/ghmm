@@ -36,6 +36,8 @@ import           Data.Text    (Text)
 import qualified JsonOptions  as Json
 
 -- ----------------------------------------------
+{-# ANN module ("HLint: ignore Use camelCase" :: Text) #-}
+-- ----------------------------------------------
 
 -- | An GitHub event including metadata.
 data Event = Event
@@ -45,7 +47,6 @@ data Event = Event
   } deriving (Show)
 
 
-{-# ANN type EventPayload ("HLint: ignore Use camelCase" :: Text) #-}
 -- | The GitHub event payload.
 data EventPayload
   =
@@ -121,7 +122,6 @@ instance FromJSON PushCommit where
   parseJSON = genericParseJSON Json.parseOptions
 
 
-{-# ANN type StatusCommit ("HLint: ignore Use camelCase" :: Text) #-}
 data StatusCommit = StatusCommit
   { scmSha      :: Text
   , scmHtml_url :: Text
@@ -132,7 +132,6 @@ instance FromJSON StatusCommit where
   parseJSON = genericParseJSON Json.parseOptions
 
 
-{-# ANN type Commit ("HLint: ignore Use camelCase" :: Text) #-}
 data Commit = Commit
   { cmtMessage :: Text
   } deriving (Eq, Show, Generic)
@@ -141,7 +140,6 @@ instance FromJSON Commit where
   parseJSON = genericParseJSON Json.parseOptions
 
 
-{-# ANN type Repository ("HLint: ignore Use camelCase" :: Text) #-}
 data Repository = Repository
   { repName           :: Text
   , repDefault_branch :: Text
@@ -169,7 +167,6 @@ instance FromJSON Committer where
   parseJSON = genericParseJSON Json.parseOptions
 
 
-{-# ANN type PullRequest ("HLint: ignore Use camelCase" :: Text) #-}
 data PullRequest = PullRequest
   { purNumber    :: Int
   , purHtml_url  :: Text
@@ -183,7 +180,6 @@ data PullRequest = PullRequest
 instance FromJSON PullRequest where
   parseJSON = genericParseJSON Json.parseOptions
 
-{-# ANN type Comment ("HLint: ignore Use camelCase" :: Text) #-}
 data Comment = Comment
   { comHtml_url   :: Text
   , comBody       :: Text
@@ -194,7 +190,6 @@ data Comment = Comment
 instance FromJSON Comment where
   parseJSON = genericParseJSON Json.parseOptions
 
-{-# ANN type User ("HLint: ignore Use camelCase" :: Text) #-}
 data User = User
   { usrLogin    :: Text
   , usrHtml_url :: Text
@@ -203,7 +198,6 @@ data User = User
 instance FromJSON User where
   parseJSON = genericParseJSON Json.parseOptions
 
-{-# ANN type Issue ("HLint: ignore Use camelCase" :: Text) #-}
 data Issue = Issue
   { issNumber    :: Int
   , issState     :: Text
@@ -218,7 +212,6 @@ data Issue = Issue
 instance FromJSON Issue where
   parseJSON = genericParseJSON Json.parseOptions
 
-{-# ANN type Review ("HLint: ignore Use camelCase" :: Text) #-}
 data Review = Review
   { revHtml_url :: Text
   , revBody     :: Text
