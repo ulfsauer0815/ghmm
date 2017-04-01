@@ -27,6 +27,15 @@ test-live: build
 lint:
 	find . -type f -iname '*.hs' -print0 | xargs -0 hlint
 
+.PHONY: stylish_haskell_install
+stylish_haskell_install:
+	stack install stylish-haskell
+
+.PHONY: stylish_haskell
+STYLISH=stylish-haskell -i {} \;
+stylish_haskell: stylish_haskell_install
+	find . -type f -iname "*.hs" -exec $(STYLISH) && git diff --exit-code
+
 
 .PHONY: docker-build
 docker-build: build test
