@@ -23,9 +23,25 @@ test: build
 test-live: build
 	. ./cfg/dev && stack exec ghmm-test-exe
 
+.PHONY: hlint-install
+hlint_install:
+	stack install hlint
+
+.PHONY: hlint
+hlint: hlint-install
+	hlint .
+
 .PHONY: lint
-lint:
-	find . -type f -iname '*.hs' -print0 | xargs -0 hlint
+lint: hlint
+
+.PHONY: hlint-apply-refact
+HLINT=hlint --refactor --refactor-options -i {} \;
+hlint-apply-refact: hlint-apply-refact-install
+	find . -type f -iname "*.hs" -exec $(HLINT)
+
+.PHONY: hlint-apply-refact-install
+hlint-apply-refact-install: hlint-install
+	stack install apply-refact
 
 .PHONY: stylish_haskell_install
 stylish_haskell_install:
