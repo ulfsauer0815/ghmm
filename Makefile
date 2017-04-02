@@ -24,7 +24,7 @@ test-live: build
 	. ./cfg/dev && stack exec ghmm-test-exe
 
 .PHONY: hlint-install
-hlint_install:
+hlint-install:
 	stack install hlint
 
 .PHONY: hlint
@@ -43,13 +43,13 @@ hlint-apply-refact: hlint-apply-refact-install
 hlint-apply-refact-install: hlint-install
 	stack install apply-refact
 
-.PHONY: stylish_haskell_install
-stylish_haskell_install:
+.PHONY: stylish-haskell-install
+stylish-haskell-install:
 	stack install stylish-haskell
 
-.PHONY: stylish_haskell
+.PHONY: stylish-haskell
 STYLISH=stylish-haskell -i {} \;
-stylish_haskell: stylish_haskell_install
+stylish-haskell: stylish-haskell-install
 	find . -type f -iname "*.hs" -exec $(STYLISH) && git diff --exit-code
 
 
