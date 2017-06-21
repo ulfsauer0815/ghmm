@@ -128,7 +128,7 @@ renderMessage' message event
               { attPretext     = Just text
               , attText        = Just body
               , attAuthor_name = Just $ usrLogin user
-              , attColor       = Just "#CC317C"
+              , attColor       = Just color
               , attFields      = [
                   Field
                     { fldShort = True
@@ -198,7 +198,7 @@ renderMessage' message event
       text =
         let optAction = if action == "created" then "" else italic action
         in  repoPrefix repository
-              <> link ("Pull Request #" <> (T.pack . show) number <> ml "Review Comment") commentHtmlUrl <> tl ": " title
+              <> link ("Pull Request #" <> (T.pack . show) number <> ml "Review Comment") commentHtmlUrl <> (ml . italic) optAction <> tl ": " title
 
   where
   optBranch defaultBranch ref =
@@ -206,8 +206,6 @@ renderMessage' message event
   lastSegment = last . T.splitOn "/"
   repoPrefix repo = "[" <> link (repName repo) (repHtml_url repo) <> "] "
   firstLine = T.takeWhile (/= '\n')
-  ifPresent e f = maybe mempty f e
-  modifyIfPresent t eMb f = maybe t (f t) eMb
   shaify t = "#" <> T.take 7 t
   fromEmpty x (Just "") = x
   fromEmpty _ (Just y)  = y
