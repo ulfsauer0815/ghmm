@@ -7,6 +7,8 @@ module Mattermost.Github.Client
     ( Event(..)
 
     , postEvent
+
+    , matchChannel -- visible for testing
     ) where
 
 import           Control.Applicative

@@ -131,6 +131,7 @@ test-suite ghmm-test
   other-modules:       Config.EnvSpec
                      , Config.YamlSpec
                      , Github.Event.JsonSpec
+                     , Mattermost.Github.ClientSpec
                      , Message.MarkdownSpec
                      , Message.UtilSpec
                      , System.Log.Priority.AesonSpec
