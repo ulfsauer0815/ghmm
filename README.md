@@ -45,15 +45,63 @@ The [Mattermost documentation](https://docs.mattermost.com/developer/webhooks-in
 explains how to set this up.
 
 You will get an address which looks similar to this one:
-> http://mattermost.hostname.com/hooks/xxx-generatedkey-xxx
+> http://mattermost.hostname.com/hooks/xyz
 
 
 ## 2. Deploy ghmm
 
-### 2.1 Create an Environment
+### 2.1 Configuration
 
-You need to set some environment variables to start ghmm.
-Most of them are self-explanatory.
+There are two ways to configure the application.
+
+1. Using a YAML/JSON configuration file (preferred)
+2. Using environment variables (limited)
+
+Using a configuration file is the preferred way.
+You can use environment variables if really necessary, but not everything can be configured that way.
+This option might become deprecated in the future.
+
+### 2.1a File-based Configuration
+
+The following example shows the different configuration options.
+
+```yaml
+port: 8000                  # Port to start ghmm on (default: `8000`)
+
+logging:
+  priority: ERROR           # Log level (default: `ERROR`)\*
+
+github:
+  secret: alligator3        # Secret you share between GitHub and ghmm (optional)
+
+mattermost:
+  url: https://mattermost   # URL where Mattermost is available
+  apiKey: xyz               # Value at the end of the incoming webhook url
+
+repositories:
+  UlfS:
+    channel: general
+  UlfS/ghmm:
+    channel: ghmm
+  _default:                 # '_default' is a reserved key for events not matching any of the other mappings
+    channel: tools
+```
+
+You need to provide the configuration file as the first argument of the application.
+
+```sh
+stack exec ghmm-exe config.yml
+```
+
+\* Accepted values:
+`DEBUG`, `INFO`, `NOTICE`, `WARNING`, `ERROR`, `CRITICAL`, `ALERT`, `EMERGENCY`
+
+### 2.1b Environment-based Configuration
+
+File-based configuration is the preferred way to configure the application.
+
+This configuration method is limited.
+It does not support mapping repositories to channels and new features will most likely not be supported as well.
 
 | Variable             | Description
 | -------------------- | ----------------------------------------------------- |

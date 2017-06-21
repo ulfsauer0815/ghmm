@@ -1,6 +1,7 @@
 {-# LANGUAGE DataKinds         #-}
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards   #-}
 {-# LANGUAGE TypeOperators     #-}
 
 -- | GitHub event types and instances.
@@ -26,6 +27,8 @@ module Github.Event.Types
     , isIssueCommentEvent
     , isPullRequestReviewEvent
     , isPullRequestReviewCommentEvent
+
+    , repository
     ) where
 
 import           GHC.Generics
@@ -142,6 +145,7 @@ instance FromJSON Commit where
 
 data Repository = Repository
   { repName           :: Text
+  , repFull_name      :: Text
   , repDefault_branch :: Text
   , repHtml_url       :: Text
   } deriving (Eq, Show, Generic)
@@ -263,3 +267,14 @@ isPullRequestReviewEvent _                        = False
 isPullRequestReviewCommentEvent :: EventPayload -> Bool
 isPullRequestReviewCommentEvent PullRequestReviewCommentEvent{} = True
 isPullRequestReviewCommentEvent _                               = False
+
+-- | The source repository of this event.
+repository :: EventPayload -> Repository
+repository PingEvent{..}                     = epiRepository
+repository PushEvent{..}                     = epuRepository
+repository PullRequestEvent{..}              = eprRepository
+repository StatusEvent{..}                   = estRepository
+repository IssuesEvent{..}                   = eisRepository
+repository IssueCommentEvent{..}             = ecoRepository
+repository PullRequestReviewEvent{..}        = ervRepository
+repository PullRequestReviewCommentEvent{..} = ercRepository

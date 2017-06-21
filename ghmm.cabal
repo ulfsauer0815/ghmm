@@ -15,16 +15,25 @@ cabal-version:       >=1.10
 -- http://stackoverflow.com/questions/29361413/including-data-files-only-in-cabal-test-suites
 -- https://github.com/commercialhaskell/stack/issues/548
 extra-source-files:  test/data/event/issuecomment.json
+                   , test/data/event/issuecomment_closing.json
+                   , test/data/event/issues.json
                    , test/data/event/pullrequest.json
+                   , test/data/event/pullrequest_merge.json
                    , test/data/event/pullrequestreview.json
                    , test/data/event/pullrequestreviewcomment.json
                    , test/data/event/push.json
+                   , test/data/event/push_null.json
+                   , test/data/event/push_pr_merge.json
                    , test/data/event/status.json
+                   , test/data/event/status_with_description.json
+                   , test/data/config/config_full.yml
+                   , test/data/config/config_sparse.yml
 
 library
   hs-source-dirs:      src
   exposed-modules:     App
-                     , Configuration
+                     , Config
+                     , Config.Types
                      , Github.Api
                      , Github.Event.Predicate
                      , Github.Event.Json
@@ -38,10 +47,18 @@ library
                      , Message.Markdown
                      , Message.Util
                      , Util
+  other-modules:       Config.Yaml
+                     , Config.Env
+                     , Config.Env.Util
+                     , Data.ByteString.Aeson
+                     , Servant.Client.Aeson
+                     , System.Log.Aeson
+
   build-depends:       base >= 4.7 && < 5
                      , aeson
                      , bytestring
                      , containers
+                     , exceptions
                      , hslogger
                      , http-client
                      , monad-control
@@ -52,6 +69,7 @@ library
                      , transformers
                      , wai
                      , warp
+                     , yaml
   default-language:    Haskell2010
   ghc-options:         -fwarn-unused-imports
                        -fwarn-incomplete-patterns
@@ -83,6 +101,10 @@ executable ghmm-exe
                      , wai-extra
                      , warp
                      , word8
+                     , yaml
+                     , aeson
+                     , containers
+                     , unordered-containers
   default-language:    Haskell2010
 
 executable ghmm-test-exe
@@ -94,6 +116,7 @@ executable ghmm-test-exe
                      , ghmm
                      , aeson
                      , bytestring
+                     , containers
                      , http-client
                      , http-client-tls
                      , servant-client
@@ -105,16 +128,22 @@ test-suite ghmm-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Spec.hs
-  other-modules:       Github.Event.JsonSpec
+  other-modules:       Config.EnvSpec
+                     , Config.YamlSpec
+                     , Github.Event.JsonSpec
                      , Message.MarkdownSpec
                      , Message.UtilSpec
+                     , System.Log.Priority.AesonSpec
   build-depends:       base
+                     , containers
                      , ghmm
                      , aeson
                      , bytestring
+                     , hslogger
                      , hspec
                      , QuickCheck
                      , quickcheck-instances
+                     , servant-client
                      , text
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010

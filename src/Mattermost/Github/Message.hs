@@ -12,7 +12,7 @@ import           Data.Maybe
 import           Data.Monoid
 import qualified Data.Text              as T
 
-import           Github.Api
+import           Github.Api             hiding (repository)
 import           Github.Event.Predicate
 import           Mattermost.Types
 import           Message.Markdown

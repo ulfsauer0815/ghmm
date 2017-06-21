@@ -13,30 +13,30 @@ build:
 
 .PHONY: run
 run:
-	. ./cfg/dev && stack exec ghmm-exe | tee -a server.log
+	stack exec ghmm-exe cfg/dev.yml | tee -a server.log
 
 .PHONY: test
 test: build
-	. ./cfg/dev && stack test
+	stack test
 
 .PHONY: test-live
 test-live: build
-	. ./cfg/dev && stack exec ghmm-test-exe
+	stack exec ghmm-test-exe cfg/dev.yml
 
 .PHONY: hlint-install
 hlint-install:
 	stack install hlint
 
 .PHONY: hlint
-hlint: hlint-install
-	hlint .
+hlint:
+	hlint -h .hlint .
 
 .PHONY: lint
 lint: hlint
 
 .PHONY: hlint-apply-refact
 HLINT=hlint --refactor --refactor-options -i {} \;
-hlint-apply-refact: hlint-apply-refact-install
+hlint-apply-refact:
 	find . -type f -iname "*.hs" -exec $(HLINT)
 
 .PHONY: hlint-apply-refact-install
@@ -49,7 +49,7 @@ stylish-haskell-install:
 
 .PHONY: stylish-haskell
 STYLISH=stylish-haskell -i {} \;
-stylish-haskell: stylish-haskell-install
+stylish-haskell:
 	find . -type f -iname "*.hs" -exec $(STYLISH) && git diff --exit-code
 
 

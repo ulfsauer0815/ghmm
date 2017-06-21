@@ -2,7 +2,7 @@
 --
 --   Based on the 'Maybe' monad, which means that failures are represented by a
 --   lonesome 'Nothing'.
-module Configuration
+module Config.Env.Util
   ( ConfigReader
   , runConfigReader
 

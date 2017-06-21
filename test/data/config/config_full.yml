@@ -1,0 +1,19 @@
+port: 12345
+
+logging:
+  priority: DEBUG
+
+github:
+  secret: abc
+
+mattermost:
+  url: https://mattermost.invalid
+  apiKey: xyz
+
+repositories:
+  org:
+    channel: what
+  org/repo:
+    channel: is
+  org2/repo2:
+    channel: this

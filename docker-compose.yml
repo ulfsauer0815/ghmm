@@ -8,7 +8,7 @@ app:
     - MATTERMOST_PORT
     - MATTERMOST_API_KEY
     - MATTERMOST_CHANNEL
-  command: /usr/local/bin/ghmm-exe
+  command: /usr/local/bin/ghmm-exe /etc/ghmm/dev.yml
   ports:
     - "8000:8000"
 
@@ -18,5 +18,8 @@ test-messages:
     - MATTERMOST_URL
     - MATTERMOST_PORT
     - MATTERMOST_API_KEY
-    - TEST_MATTERMOST_CHANNEL
-  command: /usr/local/bin/ghmm-test-exe
+    - MATTERMOST_CHANNEL
+  command: /usr/local/bin/ghmm-test-exe /etc/ghmm/dev.yml
+
+  volumes:
+    - ./cfg:/etc/ghmm:ro

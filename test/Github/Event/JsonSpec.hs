@@ -106,5 +106,5 @@ loadAndCheckEvent file header = do
   eventEt `shouldSatisfy` isRight
   return $ Event (fromRight eventEt) header "delivery-id"
 
-loadFile :: String -> IO ByteString
+loadFile :: FilePath -> IO ByteString
 loadFile relPath = BL.readFile $ "test/data/event/" ++ relPath

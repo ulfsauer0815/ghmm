@@ -3,14 +3,13 @@
 -- | The server listening for GitHub events and relaying them to Mattermost.
 module Main where
 
+import           System.Environment
 import           System.IO
 import           System.Log
 import           System.Log.Handler.Simple
 import           System.Log.Logger                    hiding (debugM, errorM,
                                                        warningM)
 import qualified System.Log.Logger                    as Log
-
-import           Data.Text                            (Text)
 
 import           Network.Wai.Handler.Warp             (run)
 import           Network.Wai.Middleware.RequestLogger
@@ -19,7 +18,7 @@ import           Network.HTTP.Client                  (newManager)
 import           Network.HTTP.Client.TLS              (tlsManagerSettings)
 
 import           App
-import           Configuration
+import           Config
 import           HmacMiddleware
 import           Lib
 import           LogFormatter
@@ -30,10 +29,12 @@ import           LogFormatter
 -- | Starts the server.
 main :: IO ()
 main = do
+  args <- getArgs
   initLoggers DEBUG
-  mbConfig <- runConfigReader readConfig
-  case mbConfig of
-    Just config -> do
+
+  mbConfig <- loadConfig $ headMaybe args
+  case mbConfig  of
+    Right config -> do
       let optAuthware = case cfgGithubSecret config of
             Just secret -> hmacAuth $ defaultAuthSettings secret
             Nothing     -> id
@@ -42,26 +43,10 @@ main = do
       let context    = AppContext config manager
       putStrLn $ "Starting ghmm (port " ++ (show . cfgPort $ config) ++ ")"
       run (cfgPort config) $ middleware $ app context
-    Nothing ->
-      errorM "Incomplete/invalid configuration"
-
-
--- | Reads the configuration from environment variables.
---   If a property is missing, it will fail.
---   If a property is malformed it will either silently fall back to the default
---   or fail as well.
-readConfig :: ConfigReader Configuration
-readConfig =
-  Configuration
-    <$> envRead       "PORT"                 `withDef` 8000
-    <*> envRead       "LOG_LEVEL"            `withDef` Log.ERROR
-    <*> envBS   `opt` "GITHUB_SECRET"        `withDef` Nothing
-    <*> envUrl        "MATTERMOST_URL"
-    <*> env           "MATTERMOST_API_KEY"
-    <*> env     `opt` "MATTERMOST_CHANNEL"   `withDef` Nothing
-    where
-    envUrl :: Text -> ConfigReader BaseUrl
-    envUrl = env' parseBaseUrl
+    Left e ->
+      errorM e
+  where
+  headMaybe xs = if null xs then Nothing else Just $ head xs
 
 
 -- | Initialize the loggers with the log level.
