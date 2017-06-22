@@ -30,9 +30,14 @@ spec =
             , cfgMattermostUrl = BaseUrl Https "mattermost.invalid" 443 ""
             , cfgMattermostApiKey = "xyz"
             , cfgRepositories = M.fromList
-              [ ("org"         , RepositoryConfig {rcgChannel = Just "what"})
-              , ("org/repo"    , RepositoryConfig {rcgChannel = Just "is"})
-              , ("org2/repo2"  , RepositoryConfig {rcgChannel = Just "this"})
+              [ ( "org"         , RepositoryConfig {rcgChannel = Just "what"   , rcgBot = Nothing})
+              , ( "org/repo"
+                , RepositoryConfig
+                    { rcgChannel = Just "is"
+                    , rcgBot     = Just BotConfig {bcgUsername = Just "Marvin", bcgIconUrl = Just "http://hhg/sad_robot.png"}
+                    }
+                )
+              , ( "org2/repo2"  , RepositoryConfig {rcgChannel = Just "this"   , rcgBot = Nothing})
               ]
             }
       loadConfig' "config_full.yml"

@@ -34,9 +34,21 @@ data Config = Config
 
 -- ----------------------------------------------
 
+-- | Repository-specific configuration options to override the defaults.
 data RepositoryConfig = RepositoryConfig
-  { rcgChannel :: Maybe Text
+  { rcgChannel :: Maybe Text       -- ^ Channel to post to
+  , rcgBot     :: Maybe BotConfig  -- ^ Sender's identity
   } deriving (Eq, Show, Generic)
 
 instance FromJSON RepositoryConfig where
+  parseJSON = genericParseJSON Json.parseOptions
+
+
+-- | Bot configuration options.
+data BotConfig = BotConfig
+  { bcgUsername :: Maybe Text  -- ^ Name of the sender
+  , bcgIconUrl  :: Maybe Text  -- ^ Icon URL of the sender
+  } deriving (Eq, Show, Generic)
+
+instance FromJSON BotConfig where
   parseJSON = genericParseJSON Json.parseOptions

@@ -69,7 +69,7 @@ The following example shows the different configuration options.
 port: 8000                  # Port to start ghmm on (default: `8000`)
 
 logging:
-  priority: ERROR           # Log level (default: `ERROR`)\*
+  priority: ERROR           # Log level (default: `ERROR`)*
 
 github:
   secret: alligator3        # Secret you share between GitHub and ghmm (optional)
@@ -83,6 +83,9 @@ repositories:
     channel: general
   UlfS/ghmm:
     channel: ghmm
+      bot:
+        username: Octocat
+        iconUrl: http://i.imgur.com/fzz0wsH.jpg
   _default:                 # '_default' is a reserved key for events not matching any of the other mappings
     channel: tools
 ```

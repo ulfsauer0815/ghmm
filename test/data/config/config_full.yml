@@ -15,5 +15,8 @@ repositories:
     channel: what
   org/repo:
     channel: is
+    bot:
+      username: Marvin
+      iconUrl: http://hhg/sad_robot.png
   org2/repo2:
     channel: this

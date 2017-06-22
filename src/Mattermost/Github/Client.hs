@@ -8,7 +8,7 @@ module Mattermost.Github.Client
 
     , postEvent
 
-    , matchChannel -- visible for testing
+    , matchRepository -- visible for testing
     ) where
 
 import           Control.Applicative
@@ -40,11 +40,19 @@ postEvent e = do
   let repoFullName = repFull_name . repository $ evtPayload e
   mmUrl             <- cfg cfgMattermostUrl
   mmApiKey          <- cfg cfgMattermostApiKey
-  mmChannel         <- matchChannel repoFullName <$> cfg cfgRepositories
+  mmRepository      <- matchRepository repoFullName <$> cfg cfgRepositories
+  let mmChannel     = mmRepository >>= rcgChannel
+  let mmUsername    = mmRepository >>= rcgBot >>= bcgUsername
+  let mmIconUrl     = mmRepository >>= rcgBot >>= bcgIconUrl
   httpClientManager <- asks ctxHttpClientManager
   let clientEnv = ClientEnv httpClientManager mmUrl
   res <- liftIO $ do
-    let message = renderMessage' messageTemplate{ mptChannel = mmChannel } . evtPayload $ e
+    let payload = messageTemplate
+          { mptChannel  = mmChannel
+          , mptUsername = mmUsername
+          , mptIcon_url = mmIconUrl
+          }
+    let message = renderMessage' payload . evtPayload $ e
     debugM $ "Posting message to mattermost: " <> show message
     runClientM (hook mmApiKey message) clientEnv
   case res of
@@ -54,9 +62,9 @@ postEvent e = do
 
 -- ----------------------------------------------
 
-matchChannel :: Text -> Map Text RepositoryConfig -> Maybe Text
-matchChannel repoFullName mapping =
-  join $ rcgChannel <$> (M.lookup repoFullName mapping <|> M.lookup org mapping <|> M.lookup "_default" mapping)
+matchRepository :: Text -> Map Text RepositoryConfig -> Maybe RepositoryConfig
+matchRepository repoFullName mapping
+  = M.lookup repoFullName mapping <|> M.lookup org mapping <|> M.lookup "_default" mapping
   where
   (org:_repo:_) = T.split (=='/') repoFullName
 

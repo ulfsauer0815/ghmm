@@ -1,6 +1,7 @@
 module Config
   ( Config(..)
   , RepositoryConfig(..)
+  , BotConfig(..)
 
   , Priority(..)
 

@@ -42,7 +42,7 @@ fromEnvConfig EnvConfig{..} = Config
   , cfgGithubSecret     = efgGithubSecret
   , cfgMattermostUrl    = efgMattermostUrl
   , cfgMattermostApiKey = efgMattermostApiKey
-  , cfgRepositories     = M.fromList [("_default", RepositoryConfig efgMattermostChannel)]
+  , cfgRepositories     = M.fromList [("_default", RepositoryConfig efgMattermostChannel Nothing)]
   }
 
 -- ----------------------------------------------

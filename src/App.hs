@@ -9,6 +9,7 @@ module App
   , AppContext(..)
   , Config(..)
   , RepositoryConfig(..)
+  , BotConfig(..)
 
   , cfg
 

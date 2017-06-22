@@ -41,7 +41,7 @@ spec =
               , cfgMattermostUrl = BaseUrl Https "mattermost.invalid" 443 ""
               , cfgMattermostApiKey = "xyz"
               , cfgRepositories = M.fromList
-                [ ("_default"    , RepositoryConfig {rcgChannel = Just "test-channel"})]
+                [ ("_default"    , RepositoryConfig {rcgChannel = Just "test-channel", rcgBot = Nothing})]
               }
         loadConfig' `shouldReturn` Right expected
 
